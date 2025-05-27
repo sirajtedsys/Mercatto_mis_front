@@ -1,0 +1,500 @@
+body {
+    /* overflow-y: hidden; */
+    width: auto !important;
+    /* overflow-x: hidden; */
+    background-color: #e9ecef;
+}
+
+body::-webkit-scrollbar {
+    width: 5px;
+    display: none;
+}
+
+body::-webkit-scrollbar-track {
+    background: #fff;
+}
+
+body::-webkit-scrollbar-thumb {
+    background: #B5975B;
+}
+
+body::-moz-scrollbar {
+    width: 8px;
+}
+
+body::-moz-scrollbar-track {
+    background: #fff;
+}
+
+body::-moz-scrollbar-thumb {
+    background: #B5975B;
+}
+
+/* background-color: #e9ecef; */
+
+body::-o-scrollbar {
+    width: 8px;
+}
+
+body::-o-scrollbar-track {
+    background: #fff;
+}
+
+body::-o-scrollbar-thumb {
+    background: #B5975B;
+}
+
+body::-ms-scrollbar {
+    width: 8px;
+}
+
+body::-ms-scrollbar-track {
+    background: #fff;
+}
+
+body::-ms-scrollbar-thumb {
+    background: #B5975B;
+}
+
+@font-face {
+    font-family: 'PlusJakartaSansVariableFont_wght';
+    src: url('../fonts/PlusJakartaSansVariableFont_wght.eot');
+    src: url('../fonts/PlusJakartaSansVariableFont_wght.eot') format('embedded-opentype'),
+        url('../fonts/PlusJakartaSansVariableFont_wght.woff2') format('woff2'),
+        url('../fonts/PlusJakartaSansVariableFont_wght.woff') format('woff'),
+        url('../fonts/PlusJakartaSansVariableFont_wght.ttf') format('truetype'),
+        url('../fonts/PlusJakartaSansVariableFont_wght.svg#PlusJakartaSansVariableFont_wght') format('svg');
+}
+
+@font-face {
+    font-family: 'PlusJakartaSansExtraBold';
+    src: url('../fonts/PlusJakartaSansExtraBold.eot');
+    src: url('../fonts/PlusJakartaSansExtraBold.eot') format('embedded-opentype'),
+        url('../fonts/PlusJakartaSansExtraBold.woff2') format('woff2'),
+        url('../fonts/PlusJakartaSansExtraBold.woff') format('woff'),
+        url('../fonts/PlusJakartaSansExtraBold.ttf') format('truetype'),
+        url('../fonts/PlusJakartaSansExtraBold.svg#PlusJakartaSansExtraBold') format('svg');
+}
+
+@font-face {
+    font-family: 'PlusJakartaSansBold';
+    src: url('../fonts/PlusJakartaSansBold.eot');
+    src: url('../fonts/PlusJakartaSansBold.eot') format('embedded-opentype'),
+        url('../fonts/PlusJakartaSansBold.woff2') format('woff2'),
+        url('../fonts/PlusJakartaSansBold.woff') format('woff'),
+        url('../fonts/PlusJakartaSansBold.ttf') format('truetype'),
+        url('../fonts/PlusJakartaSansBold.svg#PlusJakartaSansBold') format('svg');
+}
+
+@font-face {
+    font-family: 'Inter_24ptSemiBold';
+    src: url('../fonts/Inter_24ptSemiBold.eot');
+    src: url('../fonts/Inter_24ptSemiBold.eot') format('embedded-opentype'),
+        url('../fonts/Inter_24ptSemiBold.woff2') format('woff2'),
+        url('../fonts/Inter_24ptSemiBold.woff') format('woff'),
+        url('../fonts/Inter_24ptSemiBold.ttf') format('truetype'),
+        url('../fonts/Inter_24ptSemiBold.svg#Inter_24ptSemiBold') format('svg');
+}
+
+@font-face {
+    font-family: 'Inter_18ptRegular';
+    src: url('../fonts/Inter_18ptRegular.eot');
+    src: url('../fonts/Inter_18ptRegular.eot') format('embedded-opentype'),
+        url('../fonts/Inter_18ptRegular.woff2') format('woff2'),
+        url('../fonts/Inter_18ptRegular.woff') format('woff'),
+        url('../fonts/Inter_18ptRegular.ttf') format('truetype'),
+        url('../fonts/Inter_18ptRegular.svg#Inter_18ptRegular') format('svg');
+}
+
+@font-face {
+    font-family: 'PlusJakartaSansSemiBold';
+    src: url('../fonts/PlusJakartaSansSemiBold.eot');
+    src: url('../fonts/PlusJakartaSansSemiBold.eot') format('embedded-opentype'),
+        url('../fonts/PlusJakartaSansSemiBold.woff2') format('woff2'),
+        url('../fonts/PlusJakartaSansSemiBold.woff') format('woff'),
+        url('../fonts/PlusJakartaSansSemiBold.ttf') format('truetype'),
+        url('../fonts/PlusJakartaSansSemiBold.svg#PlusJakartaSansSemiBold') format('svg');
+}
+
+@font-face {
+    font-family: 'PlusJakartaSansRegular';
+    src: url('../fonts/PlusJakartaSansRegular.eot');
+    src: url('../fonts/PlusJakartaSansRegular.eot') format('embedded-opentype'),
+        url('../fonts/PlusJakartaSansRegular.woff2') format('woff2'),
+        url('../fonts/PlusJakartaSansRegular.woff') format('woff'),
+        url('../fonts/PlusJakartaSansRegular.ttf') format('truetype'),
+        url('../fonts/PlusJakartaSansRegular.svg#PlusJakartaSansRegular') format('svg');
+}
+
+p {
+    font-weight: normal;
+    font-size: 17px;
+}
+
+.main-container {
+    margin: 0 50px;
+}
+
+
+.banner-form .form-group {
+    position: relative;
+    margin-bottom: 7px;
+}
+
+.banner-form .form-group p {
+    font-size: 10px;
+    line-height: 14px !Important;
+}
+
+.banner-form label {
+    position: absolute;
+    top: -10px;
+    left: 15px;
+    background-color: #fff;
+    padding: 0 5px;
+    font-size: 12px;
+    color: #666;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    font-family: "Open Sans", sans-serif;
+
+}
+
+.banner-form input:focus+label,
+.banner-form select:focus+label {
+    opacity: 1;
+}
+
+.banner-form input,
+.banner-form select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #808080;
+    transition: border-color 0.3s ease;
+    font-family: "Open Sans", sans-serif;
+    background: transparent;
+    color: #000;
+    opacity: 0.5;
+    padding: 9px 9px;
+    font-size: 15px;
+
+}
+
+
+.banner-form button {
+    width: 100%;
+    padding: 9px;
+    background: #CA252B;
+    border: none;
+    border-radius: 20px;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 30px;
+}
+
+.banner-form button:hover {
+    background: #CA252B;
+}
+
+
+
+
+.banner-form input,
+.banner-form select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #808080;
+    transition: border-color 0.3s ease;
+    font-family: "Open Sans", sans-serif;
+    background: transparent;
+    color: #000;
+    opacity: 0.5;
+    padding: 9px 9px;
+    font-size: 15px;
+}
+
+
+.banner-form .name-box {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #808080;
+}
+
+.loginwrapper {
+    padding: 20px 0;
+    background: #f8fcff;
+    position: relative
+}
+
+.loginwrapper::before {
+    width: 50%;
+    background-color: #fff;
+    right: 0;
+    position: absolute;
+    top: 0;
+    content: '';
+    height: 100%;
+}
+
+.loginright h3 {
+    font-size: 25px;
+    font-weight: 600;
+    padding-bottom: 10px;
+    margin: 0;
+}
+
+.loginright h5 {
+    color: #b1afaf;
+    font-size: 20px;
+}
+
+.loginright {
+    padding: 40px 50px;
+    position: relative;
+    width: 75%;
+    margin: auto;
+}
+
+.loginright a {
+    color: #3699ff;
+    text-decoration: none;
+}
+
+.logintop {
+    position: relative;
+}
+
+/* .logintop::before {
+    position: absolute;
+    content: '';
+    width: 180px;
+    right: 0;
+    top: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #FFF 0%, #d3ab50 100%);
+}
+
+.logintop::after {
+    position: absolute;
+    content: '';
+    width: 3px;
+    right: 0;
+    top: 0;
+    height: 180px;
+    background: linear-gradient(30deg, #fff 0%, #d3ab50 100%);
+} */
+
+.loginbg {
+    padding: 30px 30px;
+}
+
+.wewrap {
+    display: flex;
+    gap: 20px;
+}
+
+.loginlogo img {
+    display: block;
+    margin: 0 auto;
+}
+
+
+/* 
+.loginbtm::before {
+    position: absolute;
+    content: '';
+    width: 180px;
+    left: 0;
+    bottom: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #d3ab50 0%, #fff 100%);
+}
+
+.loginbtm::after {
+    position: absolute;
+    content: '';
+    width: 3px;
+    left: 0;
+    bottom: 0;
+    height: 180px;
+    background: linear-gradient(60deg, #d3ab50 0%, #fff 100%);
+} */
+
+.logincenters {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loginright h2 {
+    font-size: 30px;
+    font-weight: 600;
+    padding: 20px 0;
+}
+
+.check-area input {
+    width: auto;
+    margin-right: 10px;
+    position: absolute;
+    top: 0px;
+}
+
+.check-area p {
+    padding-left: 20px;
+}
+
+.banner-form .form-group p {
+    font-size: 15px;
+    color: #999;
+    font-weight: 400;
+    margin: 0;
+}
+
+.banner-form .name-box {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #000;
+    border-radius: 6px;
+    height: 60px;
+    margin-bottom: 20px;
+}
+
+.forgot {
+    text-align: right;
+}
+
+.float-group {
+    position: relative;
+    margin-bottom: 7px;
+}
+
+.float-label {
+    position: absolute;
+    left: 9px;
+    top: 20px;
+    pointer-events: none;
+    color: var(--placeholder-color);
+    transition: all 200ms ease-in-out;
+    color: #000;
+    font-family: "Open Sans", sans-serif;
+    font-weight: normal;
+    font-size: 14px;
+}
+
+.banner-form input:focus~.float-label,
+.banner-form input:not(:focus):valid~.float-label {
+    top: -10px;
+    color: black;
+    left: 15px;
+    border-radius: 0.25em;
+    background: #fff;
+    opacity: 1;
+    font-size: 12px;
+}
+
+.banner-form input:focus {
+    outline: none;
+    border-color: #000;
+}
+
+.banner-form .name-box.ph-number {
+    padding-left: 60px;
+}
+
+.banner-form .ph-number~.float-label {
+    left: 60px;
+}
+
+.banner-form .ph-number~.float-label~.country-code {
+    position: absolute;
+    left: 15px;
+    top: 10px;
+    pointer-events: none;
+    transition: all 200ms ease-in-out;
+    color: #000;
+    font-family: 'Open Sans';
+    font-weight: normal;
+    font-size: 14px;
+    height: 22px;
+    padding-right: 10px;
+    border-right: 1px solid black;
+}
+
+
+@media (max-width: 991px) {
+    .loginwrapper::before {
+        width: auto;
+    }
+
+    .loginwrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center
+    }
+
+    .loginwrapper {
+        padding: 20px 0;
+    }
+
+    .wewrap {
+        display: block;
+    }
+
+    .loginlogo {
+        margin-bottom: 10px;
+    }
+
+    .loginlogo img {
+        width: 148px;
+    }
+
+    .loginright {
+        padding: 0px;
+        width: 100%;
+    }
+
+    .main-container {
+        margin: 0 30px;
+    }
+
+    .forgot {
+        text-align: left;
+    }
+
+    .banner-form button {
+        width: auto;
+        padding: 5px 40px;
+        font-size: 15px;
+        margin-top: 20px;
+        display: block;
+        margin: 0 auto;
+        margin-top: 15px;
+    }
+
+    .loginright h3 {
+        font-size: 20px;
+    }
+
+
+    .loginright h5 {
+        font-size: 17px;
+    }
+
+    .loginright h2 {
+        font-size: 24px;
+        font-weight: 600;
+        padding: 0px 0;
+        margin-bottom: 20px;
+    }
+
+    .float-label {
+        top: 15px;
+    }
+
+    .banner-form .name-box {
+        height: 50px;
+        margin-bottom: 10px;
+    }
+}

@@ -1,0 +1,194 @@
+
+<!-- <body> -->
+  <!-- <div class="container"> -->
+    <section class="container-fluid  py-4">
+      <h3 class="mb-4 fw-bold">Customer Sales Report</h3>    
+    
+      <div class="row">
+        <div class="col-3">
+          <h6>From Date</h6>
+          <input type="date" [(ngModel)]="Fromd" [max]="Today" id="fromd" name="fromd" class="form-control">
+        </div>
+        <div class="col-3">
+          <h6>To Date</h6>
+          <input type="date" class="form-control" [min]="Fromd"  [max]="Today" [(ngModel)]="Tod" id="Tod" name="Tod">
+        </div>
+        <div class="col-3">
+          <div class="form-group">
+            <div class="form-group">
+              <h6>Branch</h6>
+              <select name="SctId" id="SctId" class="form-select" [(ngModel)]="SctId" >
+                <option value="">All </option>
+                <option [value]="customer.SCT_ID" *ngFor="let customer of sctList">
+                  {{ customer.SCT_NAME }}
+                </option>
+              </select>
+            </div>
+            
+          </div>
+        </div>
+        <div class="col-2 " >
+    
+          <button class="btn btn-outline-success active"  (click)="getReport()" style="margin-top: 30px;"> <i class="fas fa-paper-plane"> </i></button>
+        </div>
+      </div>
+
+    </section>
+
+    <div class="responsive-table-wrapper mb-5" >
+      <div class="col-12 text-center" *ngIf="BillWiseReportData.length==0 && ColumnHeaders.length==0">
+       <h5 class="text-center">No Record Found!</h5>
+      </div>
+       <div class="table-container" *ngIf="BillWiseReportData.length!=0 && ColumnHeaders.length!=0">
+         <table class="custom-table">
+           <thead>
+             <tr>
+               <th>#</th> 
+               <th>Customer Name</th>
+               <th class="text-end" *ngFor="let items of ColumnHeaders"> {{removeSingleQuotesFromString(items)}}</th>
+             </tr>
+           </thead>
+           <tbody id="tableBody">
+             <tr *ngFor="let item of BillWiseReportData; let i = index" class="text-black">
+               <td>{{ i + 1 }}</td>
+               
+               <td>
+                 <a href="#" (click)="openModal(item)" data-bs-toggle="modal" data-bs-target="#itemModal">
+                   {{ item.CUST_NAME }}
+                 </a>
+               </td>
+               
+               <td class="text-end" *ngFor="let month of ColumnHeaders">
+                 {{ item["'" + month + "'"]  | number: '1.3-3' }}
+               </td>
+             </tr>
+           <tr>
+            <td  class="text-end fw-bold"colspan="2">Total</td>
+            <td class="text-end  fw-bold" *ngFor="let item of ColumnHeaders">{{getTotalForMonth("'"+item+"'")}}</td>
+           
+             </tr>
+           </tbody>
+         </table>
+       </div>
+     
+     </div>
+    
+<!--     
+    <div class="responsive-table-wrapper mb-5" >
+     
+      <div class="table-container">
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>#</th> 
+              <th>Customer Name</th>
+              <th class="text-end"> JAN</th>
+              
+              <th class="text-end">FEB</th>
+              <th class="text-end">MAR</th>
+              <th class="text-end">APR</th>
+              <th class="text-end">MAY</th>
+              <th class="text-end">JUN</th>
+              <th class="text-end">JUL</th>
+              <th class="text-end">AUG</th>
+              <th class="text-end">SEP</th>
+              <th class="text-end">OCT</th>
+              <th class="text-end">NOV</th>
+              <th class="text-end">DEC</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+            <tr *ngFor="let items of BillWiseReportData; let i = index" class="text-black">
+              <td>{{ i + 1 }}</td>
+              <td>
+                <a href="#" (click)="openModal(items)" data-bs-toggle="modal" data-bs-target="#itemModal">
+                  {{ items.CUST_NAME }}
+                </a>
+              </td>
+              <td class="text-end">{{ items.JAN | number: '1.3-3' }}</td>
+              <td class="text-end">{{ items.FEB | number: '1.3-3' }}</td>
+              <td class="text-end">{{ items.MAR | number: '1.3-3' }}</td>
+              <td class="text-end">{{ items.APR | number: '1.3-3' }}</td>
+              <td class="text-end">{{ items.MAY | number: '1.3-3' }}</td>
+              <td class="text-end">{{ items.JUN | number: '1.3-3' }}</td>
+              <td class="text-end">{{ items.JUL | number: '1.3-3' }}</td>
+              <td class="text-end">{{ items.AUG | number: '1.3-3' }}</td>
+              <td class="text-end">{{ items.SEP | number: '1.3-3' }}</td>
+              <td class="text-end">{{ items.OCT | number: '1.3-3' }}</td>
+              <td class="text-end">{{ items.NOV | number: '1.3-3' }}</td>
+              <td class="text-end">{{ items.DEC | number: '1.3-3' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    
+    </div> -->
+
+    <!-- <div class="modal fade" id="itemModal" tabindex="-1" aria-labelledby="itemModalabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="itemModalabel"></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+    
+        
+        </div>
+      </div>
+    </div> -->
+    <!-- </div> -->
+
+    <div class="modal fade" id="itemModal" tabindex="-1" aria-labelledby="itemModalabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        
+          <div class="modal-header">
+            <!-- <h5 class="modal-title" id="itemModalabel">Select Month</h5> -->
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          
+          <div class="modal-body">
+              <div class="table-responsive">
+                <table class="table border-dark table-bordered table-hover small-text-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 4%;text-align: center;">Sl.No</th>
+                            <th style="width: 20%;text-align: center;">Customer Name</th>
+                            <th style="width: 10%;text-align: center;">Date</th>
+                            <th style="width: 10%;text-align: center;">Bill No</th>
+                            <!-- <th style="text-align: center;"> Party</th>
+                            <th style="text-align: center;">Qty</th>
+                            <th style="text-align: center;">UNIT</th>
+                            <th style="text-align: center;">PRICE</th> -->
+                            <th style="width: 10%;text-align: center;">AMOUNT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      <tr  *ngFor="let items of TaskList;let i = index">
+                        <td class="text-center">{{i+1}}</td>
+                        <td style="text-align: center;">{{items.PARTY}}</td>
+                        <td style="text-align: center;">{{items.SALE_DATE | date:'dd/MMM/yyyy'}}</td>
+                        <td style="text-align: center;">{{items.SALE_BILL_NO }}</td>
+                        <!-- <td style="text-align: center;">{{items.PARTY}}</td>
+                        <td style="text-align: center;">{{items.QTY}}</td>
+                        <td style="text-align: center;">{{items.Unit}}</td>
+                        <td style="text-align: center;">{{items.Price}}</td> -->
+                        <td style="text-align: center;">{{items.AMOUNT}}</td>
+                       
+                    </tr>
+                
+          
+                    </tbody>
+                </table>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    
+    
+    <!-- </body> -->
+    
+    
