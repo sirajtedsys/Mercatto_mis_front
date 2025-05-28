@@ -46,9 +46,21 @@ const routes: Routes = [
     path: 'oneitem-all-party-report',
     loadChildren: () => import('./oneitem-all-party-report/oneitem-all-party-report.module').then( m => m.OneitemAllPartyReportPageModule)
   },
+  {
+    path: 'profit-report',
+    loadChildren: () => import('./profit-report/profit-report.module').then( m => m.ProfitReportPageModule)
+  },
+  {
+    path: 'customer-aging-report',
+    loadChildren: () => import('./customer-aging-report/customer-aging-report.module').then( m => m.CustomerAgingReportPageModule)
+  },
      
     ]
   },
+
+
+ 
+
  
 
  

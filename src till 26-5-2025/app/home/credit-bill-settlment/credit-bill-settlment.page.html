@@ -1,0 +1,510 @@
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 text-center">
+      <h4>Credit Bill Settlement</h4>
+    </div>
+  </div>
+  
+</div>
+
+<div class="container">
+  <div class="card1 p-2">
+    
+    <div class="row">
+      <div class="col-12 col-md-3 col-lg-3">
+        <div class="form-group">
+          <label for="SettlementNo">Settlement No</label>
+          <input type="text" disabled placeholder="Settlement No" id="SettlementNo" name="SettlementNo"
+           [(ngModel)]="SettlementNo" class="form-control">
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3 col-lg-3">
+        <div class="form-group">
+          <label for="BillDate">Settlement Date</label>
+          <input type="date" class="form-control" id="BillDate" name="BillDate" [(ngModel)]="BillDate">
+        </div>
+      </div>
+
+
+      <div class="col-6 col-md-3 col-lg-3">
+        <div class="form-group">
+          <label for="CurrentFinancialYear">Financial Year</label>
+          <!-- <input type="text" class="form-control"> -->
+          <select name="CurrentFinancialYear" id="CurrentFinancialYear" class="form-select" [(ngModel)]="CurrentFinancialYear">
+            <option value="0">Select Financial Year</option>
+            <option [value]="items.FIN_YEAR_ID" *ngFor="let items of FinanceYearList">{{items['Financial Year']}}</option>
+            <!-- <option value="">2023</option>
+            <option value="">2022</option> -->
+          </select>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3 col-lg-3">
+        <div class="form-group">
+          <label for="">Search Type</label>
+          <!-- <input type="text" class="form-control"placeholder="Search Type"> -->
+          <select name="" id="" class="form-select"  [(ngModel)]="SearchType">
+            <option value="Cust">Customer Name wise</option>
+            <option value="Bill">Bill wise</option>
+            <option value="Invoice">Invoice Manual</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-6 col-md-6 col-lg-6">
+        <div class="form-group">
+          <label for="">Amount to Pay</label>
+          <input type="number" disabled class="form-control text-end" [value]="GetAmountToPay()" placeholder="Amount To Pay">
+        </div>
+      </div>
+
+
+      <div class="col-8 col-md-4 col-lg-4" *ngIf="SearchType=='Bill'">
+        <div class="form-group">
+          <label for="bill">Bill No</label> 
+          <input type="text" class="form-control"  [(ngModel)]="InvoiceBillNo" id="bill" name="bill" placeholder="Bill No">
+        </div>
+      </div>
+      <div class="col-8 col-md-4 col-lg-4" *ngIf="SearchType=='Invoice'">
+        <div class="form-group">
+          <label for="invoice">Invoice No</label> 
+          <input type="text" class="form-control" placeholder="Invoice No" [(ngModel)]="InvoiceBillNo" id="invoice" name="invoice">
+        </div>
+      </div>
+      <div class="col-4 col-md-2 col-lg-2" *ngIf="SearchType!='Cust'">
+        <button class="btn btn-outline-success active mt-4" (click)="SearchInvoiceorBill()"><i class="fa fa-search"></i></button>
+      </div>
+      
+</div>
+
+
+
+    <div class="row" *ngIf="SearchType=='Cust'">
+      <div class="col-12">
+        <div class="form-group">
+          <label for="">Customers</label>
+          <input type="text" class="form-control" name="customers" id="customers" [(ngModel)]="CustomersName" (click)="OpencustomerModal()" placeholder="Select Customers">
+        </div>
+      </div>
+    </div>
+    <div class="row" *ngIf="CustomerListByBranch.length>0">
+      <div class="col-12">
+        <div class="form-group">
+          <label for="brcust">Select Branch Customers</label>
+          <input type="text" class="form-control" name="brcust" id="brcust" [(ngModel)]="BranchCustomersName" (click)="OpenBranchcustomerModal()" placeholder="Select Customers">
+        </div>
+      </div>
+    </div>
+  
+</div>
+
+  <!-- <div class="table-responsive" *ngIf="CustomerListByBranch.length>0">
+    <table class="table table-hover" id="dataTable">
+      <thead class="table-dark">
+        <tr>
+          <th ><input type="checkbox" ></th>
+          <th >Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let lists of CustomerListByBranch;let i =index">
+          <td><input type="checkbox" (click)="BranchCustomerList($event)"></td>
+          <td >{{lists.CUST_NAME}}</td>
+        </tr>
+   
+      </tbody>
+    </table>
+  </div> -->
+
+
+ 
+</div>
+<div class="container"  *ngIf="CustomerPaymentList.length>0">
+  <div class="card1 p-2">
+    <div class="row">
+      <div class="col-6 col-md-3">
+        <!-- <input type="radio">Bill Wise -->
+        <input type="radio" [checked]="Billtype=='consolidate'" (change)="BillTypeChange($event,'consolidate')">Consolidate
+      </div>
+      <div class="col-6 col-md-3">
+        <input type="radio" [checked]="Billtype=='bill'" (change)="BillTypeChange($event,'bill')">Bill Wise
+        <!-- <input type="radio">Consolidate -->
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-group d-flex">
+          <label for="">Recieved Amount</label>
+          <input type="number" placeholder="Recieved Amt" (input)="RecievedAMoutInsert($event)" class="form-control">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container" *ngIf="CustomerPaymentList.length>0">
+  <!-- <div class="card1 p-1"> -->
+    <div class="row">
+      <div class="col-12">
+        <input type="text" class="form-control w-100 search" [(ngModel)]="searchQuery" id="searchQuery" name="searchQuery" placeholder="Search here" >
+      </div>
+    </div>
+  <!-- </div> -->
+</div>
+
+<div class="container" *ngIf="appconfig.MobileApp==true &&CustomerPaymentList.length>0">
+  <div class="card1 p-1">
+    <div class="row">
+      <div class="col-6">
+        Select all <input type="checkbox" [checked]="CheckForAllChecked()" (change)="CheckAll($event)">
+      </div>
+      <div class="col-6 text-end">
+        Selected {{GetCheckedListcount()}}/{{this.CustomerPaymentList.length}}
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container1" *ngIf="CustomerPaymentList.length>0">
+  <!-- <h2>Billing Records</h2> -->
+  <table>
+      <thead >
+          <tr>
+              <th><input type="checkbox" [checked]="CheckForAllChecked()" (change)="CheckAll($event)"></th>
+              <th>Section</th>
+              <th>Bill Date</th>
+              <th>Manual Inv.No</th>
+              <th>Bill #</th>
+              <th>Customer</th>
+              <th>Bill Amt</th>
+              <th>Col Amt</th>
+              <th>Bal. Amt</th>
+              <th>Disc Amt</th>
+              <th>Settled Amt</th>
+          </tr>
+      </thead>
+      <tbody>
+        <!-- {
+          "SCT_ID": 1210000001,
+          "SECTION_TYPE": "1",
+          "SECTION": "Sales",
+          "SALE_DATE": "2024-12-31T12:22:03",
+          "CUST_NAME": "BABASONS W.L.L (SANAD)",
+          "MANUAL_INVOICE_NO": "11191",
+          "SALE_BILL_NO": "37565",
+          "SALE_NET_AMT": 723.035,
+          "SETTLED_AMT": null,
+          "SETTLED_DISC_AMT": 0,
+          "SALE_CUSTOMER_ID": 1210000002,
+          "SALE_ID": 121240039819
+      } -->
+          <tr *ngFor="let items of getFilteredCustomerPayments();let i = index">
+              <td><input type="checkbox" [checked]="items.Checked==true" (change)="CheckItems($event,items,i)" class="status-checkbox cpoint"></td>
+              <td>{{items.SECTION}}</td>
+              <td data-label="Bill Date">{{items.SALE_DATE | date:'dd/MMM/yyyy hh:mm a'}}</td>
+              <td data-label="Manual Inv.No">{{items.MANUAL_INVOICE_NO}}</td>
+              <td data-label="Bill #">{{items.SALE_BILL_NO}}</td>
+              <td data-label="Customer">{{items.CUST_NAME}}</td>
+              <td data-label="Bill Amt">{{items.SALE_NET_AMT}}</td>
+              <td data-label="Col Amt">{{items.SETTLED_AMT==null?0:items.SETTLED_AMT}}</td>
+              <td data-label="Bal. Amt">{{GetBalanceAMount(0,items.SETTLED_AMT,items.SALE_NET_AMT,items.Entered_settle_amt)}}
+                <!-- <input type="text" [value]="" disabled class="form-control text-end"> -->
+              </td>
+              <td data-label="Disc Amt"><input type="number" [disabled]="items.Checked!=true || Billtype!='bill'" (input)="EnterDiscount($event,items,i)" class="form-control text-end" [value]="items.SETTLED_DISC_AMT"></td>
+              <td data-label="Settled Amt"><input [disabled]="items.Checked!=true" type="number"(input)="EnterSettledAmount($event,items,i)" class="form-control text-end" [value]="items.Entered_settle_amt"></td>
+          </tr>
+  
+      </tbody>
+  </table>
+</div>
+<div class="container mb-3"  *ngIf="CustomerPaymentList.length>0">
+  <div class="card1 p-2">
+    <div class="row ">
+      <div class="col-6 col-md-3">
+        <div class="form-group">
+          <label for="">Cancelled Remarks</label>
+          <textarea name="" id="" class="form-control"  placeholder="cancelled remarks"></textarea>
+        </div>
+      </div>
+      <div class="col-6 col-md-3" >
+        <div class="form-group">
+          <label for="CrbcDiscAmt">Discount Amount</label>
+          <input type="number" [disabled]="Billtype=='bill'" [value]="GetDiscountAmount()" [(ngModel)]="cb.CrbcDiscAmt" id="CrbcDiscAmt" name="CrbcDiscAmt" class="form-control" placeholder="Discount Amount">
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="form-group">
+          <label for="CrbcSettledAmt">Settled Amount</label>
+          <input type="text" disabled class="form-control" [value]="GetSettledAmount()" id="CrbcSettledAmt" name="CrbcSettledAmt" [(ngModel)]="cb.CrbcSettledAmt" placeholder="Settled Amount">
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="form-group">
+          <label for="CrbcTotalAmt">Net Amount</label>
+          <input type="text" disabled class="form-control" [value]="GetNetAmount()" id="CrbcTotalAmt" name="CrbcTotalAmt" [(ngModel)]="cb.CrbcTotalAmt" placeholder="Net Amount">
+        </div>
+      </div>
+  
+    </div>
+  </div>
+</div>
+
+<div class="container mb-5 ">
+  <!-- <div class="card1 p-3"> -->
+    <div class="row">
+      <div class="col-12 text-center">
+
+        <button class="btn btn-outline-danger active mx-1" (click)="ClearForm()">Clear</button>
+        <button class="btn btn-outline-primary active mx-1" data-bs-toggle="modal" data-bs-target="#exampleModal">Payment Details</button>
+        <button class="btn btn-outline-success active mx-1" (click)="Submit()">Submit bills</button>
+     
+      </div>
+        
+      <!-- <div class="col-4 text-center">
+       
+      </div>
+      
+      <div class="col-4 text-center">
+      
+      </div> -->
+     
+    </div>
+  <!-- </div> -->
+</div>
+
+
+
+
+<div class="modal fade " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header-custom">
+        <button type="button"  class="btn  btn-back" data-bs-dismiss="modal">
+        <i class="fa fa-arrow-left"></i> Back
+        </button>
+        <h5 class="modal-title text-center">Payment Details</h5>
+        <button type="button" data-bs-dismiss="modal" class="btn btn-primary btn-done">
+          Submit
+        </button>
+      </div>
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <div class="container">
+          <div class="row">
+            <div class="col-12 text-center text-success">
+              <label for="">Payable Balance Amount:{{getPayableBalanceAMount()}}</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6 col-md-4 col-lg-3">
+              <div class="form-group">
+                <label for="CashCheck">Cash</label>
+                <br>
+                <input type="checkbox" (change)="CashCheckButton($event)" [checked]="CashCheck" placeholder="CashCheck" id="CashCheck" name="CashCheck">
+              </div>
+            </div> 
+            <div class="col-6 col-md-4 col-lg-3">
+              <div class="form-group">
+                <label for="">Cash Amount<span class="text-danger">*</span> </label>
+                <input type="text" class="form-control" [disabled]="!CashCheck" [(ngModel)]="cb.PayCashAmt" placeholder="Cash Amount" id="PayCashAmt" name="PayCashAmt">
+              </div>
+            </div> 
+            <div class="col-6 col-md-4 col-lg-3">
+              <div class="form-group">
+                <label for="CreditCardCheck">Credit Card</label>
+                <br>
+                <input type="checkbox"(change)="CreditCardCheckButton($event)" [checked]="CreditCardCheck"   placeholder="" id="CreditCardCheck" name="CreditCardCheck">
+              </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3">
+              <div class="form-group">
+                <label for="">Card Amount<span class="text-danger">*</span> </label>
+                <input type="text" class="form-control"[(ngModel)]="cb.PayCcAmt" [disabled]="!CreditCardCheck" placeholder="Card Amount" id="PayCcAmt" name="PayCcAmt">
+              </div>
+            </div> 
+            <div class="col-6 col-md-4 col-lg-3">
+              <div class="form-group">
+                <label for="PayCcBankId">Bank</label>
+                <select name="PayCcBankId" class="form-select" id="PayCcBankId" [(ngModel)]="cb.PayCcBankId" [disabled]="!CreditCardCheck">
+                  <option value="">Select Bank</option>
+                  <option [value]="items.BANK_ID" *ngFor="let items of BankList">{{items.Bank}}</option>
+                </select>
+                <!-- <input type="text" class="form-control"[(ngModel)]=" placeholder="Bank" id="PayCcBankId" name="PayCcBankId"> -->
+              </div>
+            </div> 
+            <div class="col-6 col-md-4 col-lg-3">
+              <div class="form-group">
+                <label for="PayCcNo">Card No</label>
+                <input type="text" class="form-control"[(ngModel)]="cb.PayCcNo" [disabled]="!CreditCardCheck" placeholder="Card No" id="PayCcNo" name="PayCcNo">
+              </div>
+            </div>
+            
+      
+
+
+
+
+    
+          </div>
+
+          <div class="row mt-2">
+            <div class="col-6 col-md-4 card p-2">
+              <div class="row">
+                <div class="col-12 col-md-12 col-lg-12">
+                  <div class="form-group">
+                    <label for="ChequeCheck">Cheque</label>
+                    <br>
+                    <input type="checkbox" (change)="ChequeCheckButton($event)" [checked]="ChequeCheck"    id="ChequeCheck" name="ChequeCheck">
+                  </div>
+                </div>
+
+                <div class="col-12 col-md-12 col-lg-12">
+                  <div class="form-group">
+                    <label for="PayChqAmt">Cheque Amount<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" [disabled]="!ChequeCheck" [(ngModel)]="cb.PayChqAmt" placeholder="Cheque Amount" id="PayChqAmt" name="PayChqAmt">
+                  </div>
+                </div> 
+                <div class="col-12 col-md-12 col-lg-12">
+                  <div class="form-group">
+                    <label for="PayChqNo">Cheque No<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" [disabled]="!ChequeCheck" [(ngModel)]="cb.PayChqNo" placeholder="Cheque No" id="PayChqNo" name="PayChqNo">
+                  </div>
+                </div> 
+                <div class="col-12 col-md-12 col-lg-12">
+                  <div class="form-group">
+                    <label for="PayChqBankId">From Bank</label>
+                    <select name="PayChqBankId" id="PayChqBankId"class="form-select" [(ngModel)]="cb.PayChqBankId" [disabled]="!ChequeCheck">
+                      <option value="">Select Bank</option>
+                      <option [value]="items.BANK_ID" *ngFor="let items of BankList">{{items.Bank}}</option>
+                    </select>
+                    <!-- <input type="text" class="form-control"[disabled]="!ChequeCheck"[(ngModel)]="cb.PayChqBankId" placeholder="From Bank" id="PayChqBankId" name="PayChqBankId"> -->
+                  </div>
+                </div> 
+                <div class="col-12 col-md-12 col-lg-12">
+                  <div class="form-group">
+                    <label for="PayToChequeBankId">To Bank<span class="text-danger">*</span></label>
+                    <select name="PayToChequeBankId" id="PayToChequeBankId"class="form-select" [(ngModel)]="cb.PayToChequeBankId" [disabled]="!ChequeCheck">
+                      <option value="">Select Bank</option>
+                      <option [value]="items.BANK_ID" *ngFor="let items of BankList">{{items.Bank}}</option>
+                    </select>
+                    <!-- <input type="text" class="form-control"[disabled]="!ChequeCheck"[(ngModel)]="cb.PayToChequeBankId" placeholder="To Bank" id="PayToChequeBankId" name="PayToChequeBankId"> -->
+                  </div>
+                </div> 
+                <div class="col-12 col-md-12 col-lg-12">
+                  <div class="form-group">
+                    <label for="PayChqDate"> Cheque Date<span class="text-danger">*</span></label>
+                    <input type="date" class="form-control"[(ngModel)]="cb.PayChqDate"[disabled]="!ChequeCheck" placeholder="" id="PayChqDate" name="PayChqDate">
+                  </div>
+                </div> 
+         
+            </div>
+            </div>
+            <div class="col-6  col-md-4 card p-2">
+              <div class="row">
+                <div class="col-12 col-md-12 col-lg-12">
+                  <div class="form-group">
+                    <label for="WalletCheck">Wallet</label>
+                    <br>
+                    <input type="checkbox" (change)="WalletCheckButton($event)" [checked]="WalletCheck"   id="WalletCheck" name="WalletCheck">
+                  </div>
+                </div>
+
+                <div class="col-12 col-md-12 col-lg-12">
+                  <div class="form-group">
+                    <label for="PayWalletId">Wallet</label>
+                    <select  class="form-select" [(ngModel)]="cb.PayWalletId" [disabled]="!WalletCheck" placeholder="wallet" id="PayWalletId" name="PayWalletId">
+                      <option value="0">Select Wallet</option>
+                      <option [value]="items.VALLET_ID" *ngFor="let items of WalletList">{{items.VALLET_NAME}} </option>
+                    </select>
+                    <!-- <input type="text" class="form-control" [(ngModel)]="cb.PayWalletId" [disabled]="!WalletCheck" placeholder="wallet" id="PayWalletId" name="PayWalletId"> -->
+                  </div>
+                </div> 
+                <div class="col-12 col-md-12 col-lg-12">
+                  <div class="form-group">
+                    <label for="PayWalletTransNo">Transaction Ref No</label>
+                    <input type="text" class="form-control"  [(ngModel)]="cb.PayWalletTransNo" [disabled]="!WalletCheck"  placeholder="Ref no" id="PayWalletTransNo" name="PayWalletTransNo">
+                  </div>
+                </div> 
+                <div class="col-12 col-md-12 col-lg-12">
+                  <div class="form-group">
+                    <label for="PayWalletBankId">Bank</label>
+                    <select name="PayWalletBankId" id="PayWalletBankId" class="form-select" [(ngModel)]="cb.PayWalletBankId" [disabled]="!WalletCheck">
+                      <option value="">Select Bank</option>
+                      <option [value]="items.BANK_ID" *ngFor="let items of BankList">{{items.Bank}}</option>
+                    </select>
+                    <!-- <input type="text" class="form-control"  [(ngModel)]="cb.PayWalletBankId" [disabled]="!WalletCheck"  placeholder="Bank" id="PayWalletBankId" name="PayWalletBankId"> -->
+                  </div>
+                </div> 
+                <div class="col-12 col-md-12 col-lg-12">
+                  <div class="form-group">
+                    <label for="PayWalletDate">Date</label>
+                    <input type="date" class="form-control"  [(ngModel)]="cb.PayWalletDate" [disabled]="!WalletCheck"  placeholder="" id="PayWalletDate" name="PayWalletDate">
+                  </div>
+                </div> 
+                <div class="col-12 col-md-12 col-lg-12">
+                  <div class="form-group">
+                    <label for="PayWalletAmt">Amount</label>
+                    <input type="number" class="form-control"  [(ngModel)]="cb.PayWalletAmt" [disabled]="!WalletCheck"  placeholder="Wallet Amount" id="PayWalletAmt" name="PayWalletAmt">
+                  </div>
+                </div> 
+            </div>
+
+            </div>
+            <div class="col-12 col-md-4 card p-2">
+              <div class="row">
+                <div class="col-12 col-md-12 col-lg-12">
+                  <div class="form-group">
+                    <label for="BtCheck">Bank Transfer</label>
+                    <br>
+                    <input type="checkbox" (change)="BtCheckButton($event)" [checked]="BtCheck"   id="BtCheck" name="BtCheck">
+                  </div>
+                </div>
+
+                <div class="col-6 col-md-12 col-lg-12">
+                  <div class="form-group">
+                    <label for="PayBankTransAmt">Transfer Amount<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control"[(ngModel)]="cb.PayBankTransAmt" [disabled]="!BtCheck" placeholder="Amount" id="PayBankTransAmt" name="PayBankTransAmt">
+                  </div>
+                </div> 
+           
+                <div class="col-6 col-md-12 col-lg-12">
+                  <div class="form-group">
+                    <label for="PayFromTransBankId">From Bank</label>
+                    <select name="PayFromTransBankId" id="PayFromTransBankId" class="form-select" [(ngModel)]="cb.PayFromTransBankId" [disabled]="!BtCheck">
+                      <option value="">Select Bank</option>
+                      <option [value]="items.BANK_ID" *ngFor="let items of BankList">{{items.Bank}}</option>
+                    </select>
+                    <!-- <input type="text" class="form-control"[(ngModel)]="cb.PayFromTransBankId"[disabled]="!BtCheck" placeholder="From Bank" id="PayFromTransBankId" name="PayFromTransBankId"> -->
+                  </div>
+                </div> 
+                <div class="col-12 col-md-12 col-lg-12">
+                  <div class="form-group">
+                    <label for="PayToTransBankId">To Bank<span class="text-danger">*</span></label>
+                    <select name="PayToTransBankId" id="PayToTransBankId" class="form-select" [(ngModel)]="cb.PayToTransBankId" [disabled]="!BtCheck">
+                      <option value="">Select Bank</option>
+                      <option [value]="items.BANK_ID" *ngFor="let items of BankList">{{items.Bank}}</option>
+                    </select>
+                    <!-- <input type="text" class="form-control"[(ngModel)]="cb.PayToTransBankId"[disabled]="!BtCheck" placeholder="To Bank" id="PayToTransBankId" name="PayToTransBankId"> -->
+                  </div>
+                </div> 
+                <div class="col-6 col-md-12 col-lg-12">
+                  <div class="form-group">
+                    <label for="PayBankTransDate"> Transfer Date</label>
+                    <input type="date" class="form-control"[(ngModel)]="cb.PayBankTransDate"[disabled]="!BtCheck" placeholder="" id="PayBankTransDate" name="PayBankTransDate">
+                  </div>
+                </div> 
+
+                <div class="col-6 col-md-12 col-lg-12">
+                  <div class="form-group">
+                    <label for="PayBankTransRefNo">Transaction Ref</label>
+                    <input type="text" class="form-control"[(ngModel)]="cb.PayBankTransRefNo"[disabled]="!BtCheck" placeholder="Transaction Ref No" id="PayBankTransRefNo" name="PayBankTransRefNo">
+                  </div>
+                </div> 
+         
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

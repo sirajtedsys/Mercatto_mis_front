@@ -1,0 +1,139 @@
+.modal-header-custom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid #dee2e6;
+    background-color: #f8f9fa;
+  }
+
+  .modal-title {
+    margin: 0 auto;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  .btn-back, .btn-done {
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+.modal{
+    z-index: 10000;
+}
+
+.search{
+    border-radius: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+.card1{
+  width: 98%;
+  margin: 20px auto;
+  // overflow-x: auto;
+  background: #fff;
+  padding: 5px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  
+}
+
+  .container1 {
+    width: 95%;
+    margin: 20px auto;
+    overflow-x: auto;
+    background: #fff;
+    padding: 5px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    max-height: 400px;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow: hidden;
+}
+
+thead {
+    background: #007bff;
+    color: white;
+    // position: absolute;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+}
+
+th {
+    position: sticky;
+    top: 0;
+    background: #007bff;
+    color: white;
+    z-index: 2;
+}
+
+tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+tr:hover {
+    background: #f1f1f1;
+}
+
+.status-checkbox {
+    width: 18px;
+    height: 18px;
+}
+
+.mobile-hide {
+    display: none;
+}
+
+/* Mobile Styles */
+@media screen and (max-width: 768px) {
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+
+    thead tr {
+        display: none;
+    }
+
+    tr {
+        border: 1px solid #ddd;
+        margin-bottom: 10px;
+        padding: 10px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    td {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    td:before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #007bff;
+    }
+
+    .mobile-hide {
+        display: block;
+    }
+    .container1{
+      max-height: 700px;
+    }
+}

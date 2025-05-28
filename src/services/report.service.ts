@@ -11,6 +11,9 @@ import { catchError, throwError } from 'rxjs';
   providedIn: 'root'
 })
 export class ReportService {
+  getItem(Fromd: any, Tod: any) {
+    throw new Error('Method not implemented.');
+  }
   GetCustomerOutstanding(fd: any, td: any) {
     throw new Error('Method not implemented.');
   }
@@ -805,7 +808,7 @@ export class ReportService {
         );
       }
 
-      GetItem(fromDate:any,toDate:any) 
+      GetItem(fromDate: any, toDate: any) // SctId: any, itemid: any
       {
       
         this.GetDecryptedData()
@@ -1010,6 +1013,71 @@ export class ReportService {
             this.CheckForUnAuthorised(error)
             // Handle the error here or rethrow it as needed
             console.error('Error in GetSupplierBalance:', error);
+            return throwError(error); // Rethrow the error
+          })
+        );
+      }
+
+
+      GetProfitMarginLC(fromDate:any,toDate:any,SctId:any){
+
+        this.GetDecryptedData() 
+        let headers = new HttpHeaders();
+        headers.set("Accept", 'application/json');
+        headers.set('Content-Type', 'application/json');
+        headers = headers.set('Authorization', 'Bearer ' + this.decryptiondata); 
+        let options ={ headers: headers };
+        return this.http.get(this.appconfig.url + '/Sales/GetProfitMarginLC?fromDate='+fromDate+'&toDate='+toDate+'&SctId='+SctId, options)
+        .pipe(
+          
+          catchError((error: any) => {
+            this.CheckForUnAuthorised(error)
+            // Handle the error here or rethrow it as needed
+            console.error('Error in GetProfitMarginLC:', error);
+            return throwError(error); // Rethrow the error
+          })
+        );
+      }
+
+
+      GetCustomerAging(fromDate: any, toDate: any, CustId: any, sctid: any){
+
+        this.GetDecryptedData() 
+        let headers = new HttpHeaders();
+        headers.set("Accept", 'application/json');
+        headers.set('Content-Type', 'application/json');
+        headers = headers.set('Authorization', 'Bearer ' + this.decryptiondata); 
+        let options ={ headers: headers };
+        return this.http.get(this.appconfig.url + '/Sales/GetCustomerAging?fromDate='+fromDate+
+          '&toDate='+toDate+'&CustId='+CustId+'&sctid='+sctid, options)
+        .pipe(
+          
+          catchError((error: any) => {
+            this.CheckForUnAuthorised(error)
+            // Handle the error here or rethrow it as needed
+            console.error('Error in GetOneitemwAllparties:', error);
+            return throwError(error); // Rethrow the error
+          })
+        );
+      }
+
+
+      GetCustomerAgingDtls(fromDate: any, toDate: any, CustId: any, sctid: any){
+
+        this.GetDecryptedData() 
+        let headers = new HttpHeaders();
+        headers.set("Accept", 'application/json');
+        headers.set('Content-Type', 'application/json');
+        headers = headers.set('Authorization', 'Bearer ' + this.decryptiondata); 
+        let options ={ headers: headers };
+        return this.http.get(this.appconfig.url + '/Sales/GetCustAgingDtls?fromDate='+fromDate+
+          '&toDate='+toDate+'&CustId='+CustId+'&sctid='+sctid, options)
+        .pipe(
+          
+          catchError((error: any) => {
+            this.CheckForUnAuthorised(error)
+            // Handle the error here or rethrow it as needed
+            console.error('Error in GetCustomerAgingDtls:', error);
             return throwError(error); // Rethrow the error
           })
         );

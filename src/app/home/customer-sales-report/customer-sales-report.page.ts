@@ -1,8 +1,13 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, Renderer2, ViewEncapsulation } from '@angular/core';
 import { LoadingController } from '@ionic/angular';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { ReportService } from 'src/services/report.service';
 import Swal from 'sweetalert2';
+import * as XLSX from 'xlsx';
+
+import * as FileSaver from 'file-saver';
 
 
 @Component({
@@ -272,5 +277,113 @@ export class CustomerSalesReportPage implements OnInit {
     loading.dismiss()
   })
   }
+
+  exportToPDF(): void {
+    const doc = new jsPDF();
+  
+    const rawTitle =  'Customer Sales Report from ' +
+        this.datepipe.transform(this.Fromd, 'dd/MMM/yyyy') +
+        ' to ' + this.datepipe.transform(this.Tod, 'dd/MMM/yyyy'); // fixed: was using Fromd twice
+  
+    const maxLineWidth = 180;
+    const splitTitle = doc.splitTextToSize(rawTitle, maxLineWidth);
+  
+    doc.setFontSize(16);
+    let currentY = 15;
+  
+    // Center-align each line
+    splitTitle.forEach((line: string) => {
+      const textWidth = doc.getTextWidth(line);
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const x = (pageWidth - textWidth) / 2;
+      doc.text(line, x, currentY);
+      currentY += 7;
+    });
+  
+    doc.setFontSize(10);
+    // Optional timestamp:
+    // doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, currentY);
+    // currentY += 8;
+    // console.log(this.ColumnHeaders);
+    
+    const col = [...this.ColumnHeaders]
+    col.unshift('Customer')
+    col.unshift('#')
+  console.log(col);
+  
+    const columns = col
+    // [
+    //   '#','Item', 
+    //   'UNIT_CODE', 'SALE_QTY', 'RTN_QTY', 'NET_SALE_QTY',
+    //   'SALE_AMOUNT', 'RTN_NET_AMT', 'NET_AMT', 'PRICE'
+    // ];
+  
+    const rows = this.BillWiseReportData.map((item, index) => [
+      index + 1,
+      
+  item.CUST_NAME,
+  ...this.ColumnHeaders.map((hed: any) => item["'"+hed+"'"] ?? '') // skip "#" and "Item"
+
+    ]);
+    
+    console.log(rows);
+    
+  
+    autoTable(doc, {
+      head: [columns],
+      body: rows,
+      startY: currentY
+    });
+  
+    const fileName = rawTitle.replace(/\s+/g, '_') + '.pdf';
+    doc.save(fileName);
+  }
+
+  exportToExcel(): void {
+    const rawTitle = 'Customer Sales Report from ' +
+    this.datepipe.transform(this.Fromd, 'dd/MMM/yyyy') +
+    ' to ' + this.datepipe.transform(this.Tod, 'dd/MMM/yyyy');
+  
+    // Map your data for export
+    const exportData = this.BillWiseReportData.map((item, index) => [
+      index + 1,
+      item.CUST_NAME,
+      ...this.ColumnHeaders.map((x:any)=>item["'"+x+"'"])
+    ]);
+    
+    const header = ['Sl.No', 'Customer', ...this.ColumnHeaders.map((x:any)=>x)];
+  
+    // Convert JSON to array of arrays
+    // const header = Object.keys(exportData[0]);
+    // const dataRows = exportData.map(obj => Object.values(obj));
+  
+    // Compose final sheet data
+    const sheetData: any[][] = [
+      [rawTitle],        // Title row
+      [],                // Empty row (optional)
+      header,            // Header row
+      ...exportData        // Data rows
+    ];
+  
+    const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(sheetData);
+    const workbook: XLSX.WorkBook = {
+      Sheets: { Report: worksheet },
+      SheetNames: ['Report']
+    };
+  
+    const excelBuffer: any = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array',
+      cellDates: true
+    });
+  
+    const data: Blob = new Blob([excelBuffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8',
+    });
+  
+    const fileName = rawTitle.replace(/\s+/g, '_') + '.xlsx';
+    FileSaver.saveAs(data, fileName);
+  }
+  
 
 }

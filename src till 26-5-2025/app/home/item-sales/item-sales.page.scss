@@ -1,0 +1,15 @@
+@import url('../../../assets/report/assets/css/style.css');
+.card-scroll-wrapper {
+    overflow-x: auto;
+    padding-bottom: 1rem;
+  }
+  
+  .card-scroll-row {
+    display: flex;
+    flex-wrap: nowrap;
+  }
+  .subtotal-row {
+    background-color: #f0f8ff; /* light blue */
+    font-weight: bold;
+    color: #070577;
+  }

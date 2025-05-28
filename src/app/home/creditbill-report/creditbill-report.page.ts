@@ -7,6 +7,8 @@ import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
+
+import * as FileSaver from 'file-saver';
 //import { saveAs } from 'file-saver';
 
 @Component({
@@ -23,8 +25,9 @@ export class CreditbillReportPage implements OnInit {
   MonthSubtotals:any
   BillWiseReportData:any[]=[]
   TaskList:any[]=[]
+   CustomerList:any[]=[]
   BillWiseReportDatafilter:any[]=[]
-  // CustomerList:any[]=[]
+ // CustomerList:any[]=[]
   CurrentCustomer:number=0
   SelectedStatus:string='Pending';
   constructor(private renderer: Renderer2,private loadingCtrl:LoadingController,
@@ -82,7 +85,21 @@ export class CreditbillReportPage implements OnInit {
               };
             });
 
-            this.BillWiseReportDatafilter = this.BillWiseReportData
+            this.BillWiseReportDatafilter = data.Data.map((item: any) => {
+              return {
+                TRANS_TYPE: item.TRANS_TYPE,
+                BILL_NO: item.BILL_NO,
+                BILL_DATE: item.BILL_DATE,
+                SALE_CUST_NAME: item.SALE_CUST_NAME,
+                CUST_ID: item.CUST_ID,
+                BILL_AMT: item.BILL_AMT,
+                SETTLED_AMT: item.SETTLED_AMT,
+                BALC_AMT: item.BALC_AMT,
+                SCT_NAME: item.SCT_NAME,
+                SALE_ID: item.SALE_ID,
+                
+              };
+            });
             
             // Calculate subtotals
           } else {
@@ -151,48 +168,49 @@ export class CreditbillReportPage implements OnInit {
     );
   }
 customerSearchText: string = '';
-customerList: any[] = []; // Original customer list
+// CustomerList: any[] = []; // Original customer list
 filteredCustomerList: any[] = [];
 showDropdown: boolean = false;
 searchHistory: string[] = [];
 filterCustomers() {
   const search = this.customerSearchText.trim().toLowerCase();
   console.log(search);
-  console.log(this.customerList,this.filteredCustomerList);
+  console.log(this.CustomerList,this.filteredCustomerList);
   
   
+  if(search=='')
+  {
 
-  // Filter existing customers
-  this.filteredCustomerList = this.customerList
-    .filter(c => c.CUST_NAME.toLowerCase().includes(search))
-    .sort((a, b) => a.CUST_NAME.tostring().localeCompare(b.CUST_NAME));
+    this.filteredCustomerList=this.CustomerList
+  }
+  else
+  {
 
-  // Check if exact name is not in the list and input is not empty
-  // const exists = this.customerList.some(c => c.CUST_NAME.toLowerCase() === search);
-  // if (search && !exists) {
-  //   // Temporarily add the typed customer to the filtered list
-  //   this.filteredCustomerList.unshift({ CUST_NAME: this.capitalizeFirstLetter(this.customerSearchText) });
-  // }
+    this.filteredCustomerList = this.CustomerList
+    .filter(c => c.CUST_NAME.toString().toLowerCase().includes(search))
+    .sort((a, b) => a.CUST_NAME.toString().localeCompare(b.CUST_NAME));
+  }
+  
 }
-
 selectCustomer(customer: any) {
   console.log(customer);
 
   
   this.customerSearchText=customer.CUST_NAME
-
+  this.CustId=customer.CUST_ID
+  this.SelectedCustName=customer.CUST_NAME
   // this.BillWiseReportData = this.BillWiseReportDatafilter.
-   this.GetCreditbill(this.datepipe.transform(this.Fromd,'dd/MM/yyyy'),this.datepipe.transform(this.Tod,'dd/MM/yyyy'),customer.CUST_ID)
+  //  this.GetCreditbill(this.datepipe.transform(this.Fromd,'dd/MM/yyyy'),this.datepipe.transform(this.Tod,'dd/MM/yyyy'),customer.CUST_ID)
    
   
   // this.customerSearchText = customer.CUST_NAME;
   // this.showDropdown = false;
 
   // // If the selected customer is newly typed, save it to the main list
-  // if (!this.customerList.some(c => c.CUST_NAME.toLowerCase() === customer.CUST_NAME.toLowerCase())) {
-  //   this.customerList.push({ CUST_NAME: customer.CUST_NAME });
+  // if (!this.CustomerList.some(c => c.CUST_NAME.toLowerCase() === customer.CUST_NAME.toLowerCase())) {
+  //   this.CustomerList.push({ CUST_NAME: customer.CUST_NAME });
   //   // Re-sort the main list
-  //   this.customerList.sort((a, b) => a.CUST_NAME.localeCompare(b.CUST_NAME));
+  //   this.CustomerList.sort((a, b) => a.CUST_NAME.localeCompare(b.CUST_NAME));
   // }
 }
 
@@ -207,63 +225,62 @@ capitalizeFirstLetter(name: string): string {
   return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 }
 
-exportToPDF() {
-  const doc = new jsPDF();
+// exportToPDF() {
+//   const doc = new jsPDF();
 
-  const headers = [['#', 'Bill No', 'Bill Date', 'Customer', 'Trans Type', 'Bill Amt', 'Settled Amt', ...(this.SelectedStatus === 'Pending' ? ['Balance'] : [])]];
+//   const headers = [['#', 'Bill No', 'Bill Date', 'Customer', 'Trans Type', 'Bill Amt', 'Settled Amt', ...(this.SelectedStatus === 'Pending' ? ['Balance'] : [])]];
   
-  const data = this.BillWiseReportData.map((item, index) => {
-    const row = [
-      index + 1,
-      item.BILL_NO,
-      this.datepipe.transform(item.BILL_DATE, 'dd-MMM-yyyy'),
-      item.SALE_CUST_NAME,
-      item.TRANS_TYPE,
-      item.BILL_AMT,
-      item.SETTLED_AMT
-    ];
-    if (this.SelectedStatus === 'Pending') {
-      row.push(item.BALC_AMT);
-    }
-    return row;
-  });
+//   const data = this.BillWiseReportData.map((item, index) => {
+//     const row = [
+//       index + 1,
+//       item.BILL_NO,
+//       this.datepipe.transform(item.BILL_DATE, 'dd-MMM-yyyy'),
+//       item.SALE_CUST_NAME,
+//       item.TRANS_TYPE,
+//       item.BILL_AMT,
+//       item.SETTLED_AMT
+//     ];
+//     if (this.SelectedStatus === 'Pending') {
+//       row.push(item.BALC_AMT);
+//     }
+//     return row;
+//   });
 
-  autoTable(doc, {
-    head: headers,
-    body: data
-  });
+//   autoTable(doc, {
+//     head: headers,
+//     body: data
+//   });
 
-  doc.save('CreditBillReport.pdf');
-}
+//   doc.save('CreditBillReport.pdf');
+// }
 
 // Export to Excel
-exportToExcel() {
-  const exportData = this.BillWiseReportData.map((item, index) => ({
-    '#': index + 1,
-    'Bill No': item.BILL_NO,
-    'Bill Date': this.datepipe.transform(item.BILL_DATE, 'dd-MMM-yyyy'),
-    'Customer': item.SALE_CUST_NAME,
-    'Trans Type': item.TRANS_TYPE,
-    'Bill Amt': item.BILL_AMT,
-    'Settled Amt': item.SETTLED_AMT,
-    ...(this.SelectedStatus === 'Pending' && { 'Balance': item.BALC_AMT })
-  }));
+// exportToExcel() {
+//   const exportData = this.BillWiseReportData.map((item, index) => ({
+//     '#': index + 1,
+//     'Bill No': item.BILL_NO,
+//     'Bill Date': this.datepipe.transform(item.BILL_DATE, 'dd-MMM-yyyy'),
+//     'Customer': item.SALE_CUST_NAME,
+//     'Trans Type': item.TRANS_TYPE,
+//     'Bill Amt': item.BILL_AMT,
+//     'Settled Amt': item.SETTLED_AMT,
+//     ...(this.SelectedStatus === 'Pending' && { 'Balance': item.BALC_AMT })
+//   }));
 
-  const worksheet = XLSX.utils.json_to_sheet(exportData);
-  const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
-  const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-  const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
-  saveAs(blob, 'CreditBillReport.xlsx');
-}
- 
-async GetCustomer(fromDate:any,toDate:any){
+//   const worksheet = XLSX.utils.json_to_sheet(exportData);
+//   const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+//   const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+//   const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+//  // saveAs(blob, 'CreditBillReport.xlsx');
+// }
+ async GetCustomer(fromDate:any,toDate:any){
     const loading = await this.loadingCtrl.create({
       cssClass: 'custom-loading',
       message: 'Loading...',
       spinner: 'dots',
     });
     await loading.present();
-    this.repser.GetCust(fromDate,toDate).subscribe((data:any)=>{
+    this.repser.GetCustomer(fromDate,toDate).subscribe((data:any)=>{
       loading.dismiss()
       console.log(data);
       
@@ -275,18 +292,18 @@ async GetCustomer(fromDate:any,toDate:any){
           console.log(data);
           // this.CustId=data.Data[0].CUST_ID
         //  this.GetAllUserRightsTab(data.MenuGroupId)
-          this.customerList=data.Data
+          this.CustomerList=data.Data
 
           this.filteredCustomerList=data.Data
-          console.log(this.customerList,this.filteredCustomerList);
+          //console.log(this.CustomerList,this.filteredCustomerList);
           // this.customerSearchText
           
           
         }
         else
         {
-          this.customerList=[]
-          this.filteredCustomerList=[]
+          this.CustomerList=[]
+         // this.filteredCustomerList=[]
           this.BillWiseReportData = [];
           
         }
@@ -294,44 +311,177 @@ async GetCustomer(fromDate:any,toDate:any){
       }
       else
       {
-          this.customerList=[]
-        this.getReport()
+          this.CustomerList=[]
+       // this.getReport()
       }
     },
   (error:any)=>{
     // this.comser.dismissLoading()
     loading.dismiss()
-  })
+  })                               
 }
-  onDateChange() {
+ OnDateChange () {
     if (this.Fromd && this.Tod) {
       this.GetCustomer(this.Fromd, this.Tod);
     }
   }
-  
+ getTotal(key: string): number {
+  if (!this.BillWiseReportData || this.BillWiseReportData.length === 0) return 0;
 
-  onStatusChange(event: Event): void {
-    const selectedValue = (event.target as HTMLSelectElement).value;
+  return this.BillWiseReportData
+    .filter(item => item[key] != null)
+    .reduce((acc, item) => acc + parseFloat(item[key]), 0);
+}
+
+
+  onStatusChange(event: any): void {
+    const selectedValue =event.target.value;
     if (selectedValue === 'Pending') {
-      this.SelectedStatus='Pending'
-    //  this.getReport();
+      // this.SelectedStatus='Pending'
+      // this.getReport();
+      this.BillWiseReportData = this.BillWiseReportDatafilter.filter((x:any)=>x.SETTLED_AMT != x.BILL_AMT)
     }
     else if (selectedValue === 'Settled') {
-       this.SelectedStatus='Settled'
-      //this.getReportSettled();
+      //  this.SelectedStatus='Settled'
+      // this.getReportSettled();
+      
+      this.BillWiseReportData = this.BillWiseReportDatafilter.filter((x:any)=>x.SETTLED_AMT == x.BILL_AMT)
     }
     else
     {
-        this.BillWiseReportData = [];
+        this.BillWiseReportData = this.BillWiseReportDatafilter
     }
   }
 
-  getTotal(field: 'BILL_AMT' | 'SETTLED_AMT' | 'BALC_AMT'): number {
-    return this.BillWiseReportData?.reduce((sum, item) => sum + (Number(item[field]) || 0), 0);
+  // OnStatusChange(event:any)
+  // {
+  //   if(event.target.value == 'Settled')
+  //   {
+
+  //   }
+  // }
+
+
+
+  SelectedCustName:string=''
+
+  exportToPDF(): void {
+    const doc = new jsPDF();
+  
+    const rawTitle = 'Credit bill Settlement Report '+    
+    (this.SelectedCustName === ''
+      ? ''
+      :'of ' +this.SelectedCustName )+ ' from ' +
+        this.datepipe.transform(this.Fromd, 'dd/MMM/yyyy') +
+        ' to ' + this.datepipe.transform(this.Tod, 'dd/MMM/yyyy'); // fixed: was using Fromd twice
+  
+    const maxLineWidth = 180;
+    const splitTitle = doc.splitTextToSize(rawTitle, maxLineWidth);
+  
+    doc.setFontSize(16);
+    let currentY = 15;
+  
+    // Center-align each line
+    splitTitle.forEach((line: string) => {
+      const textWidth = doc.getTextWidth(line);
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const x = (pageWidth - textWidth) / 2;
+      doc.text(line, x, currentY);
+      currentY += 7;
+    });
+  
+    doc.setFontSize(10);
+    // Optional timestamp:
+    // doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, currentY);
+    // currentY += 8;
+  
+    const columns = [
+      '#', 'Bill No', 'Bill Date', 'Customer', 'Trans Type', 'Bill Amt', 'Settled Amt', ...(this.SelectedStatus === 'Pending' ? ['Balance'] : [])
+    ];
+  
+    const data = this.BillWiseReportData.map((item, index) => {
+      const row = [
+        index + 1,
+        item.BILL_NO,
+        this.datepipe.transform(item.BILL_DATE, 'dd-MMM-yyyy'),
+        item.SALE_CUST_NAME,
+        item.TRANS_TYPE,
+        item.BILL_AMT,
+        item.SETTLED_AMT
+      ];
+      if (this.SelectedStatus === 'Pending') {
+        row.push(item.BALC_AMT);
+      }
+      return row;
+    });
+  
+    autoTable(doc, {
+      head: [columns],
+      body: data,
+      startY: currentY
+    });
+  
+    const fileName = rawTitle.replace(/\s+/g, '_') + '.pdf';
+    doc.save(fileName);
   }
 
-}
-function saveAs(blob: Blob, arg1: string) {
-  throw new Error('Function not implemented.');
+
+  // import * as XLSX from 'xlsx';
+  // import * as FileSaver from 'file-saver';
+  
+  exportToExcel(): void {
+    const rawTitle = 'Credit bill Settlement Report ' +    
+      (this.SelectedCustName === '' ? '' : 'of ' + this.SelectedCustName) + 
+      ' from ' + this.datepipe.transform(this.Fromd, 'dd/MMM/yyyy') +
+      ' to ' + this.datepipe.transform(this.Tod, 'dd/MMM/yyyy');
+  
+    // Map your data for export
+    const exportData = this.BillWiseReportData.map((item, index) => ({
+      'Sl.No': index + 1,
+      'Bill No': item.BILL_NO,
+      'Bill Date': item.BILL_DATE ? new Date(item.BILL_DATE) : '',
+      'Customer': item.SALE_CUST_NAME,
+      'Transaction Type': item.TRANS_TYPE,
+      'Bill Amount': item.BILL_AMT,
+      'Settled Amount': item.SETTLED_AMT,
+      'Balance': item.BALC_AMT
+    }));
+  
+    // Convert JSON to array of arrays
+    const header = Object.keys(exportData[0]);
+    const dataRows = exportData.map(obj => Object.values(obj));
+  
+    // Compose final sheet data
+    const sheetData: any[][] = [
+      [rawTitle],        // Title row
+      [],                // Empty row (optional)
+      header,            // Header row
+      ...dataRows        // Data rows
+    ];
+  
+    const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(sheetData);
+    const workbook: XLSX.WorkBook = {
+      Sheets: { Report: worksheet },
+      SheetNames: ['Report']
+    };
+  
+    const excelBuffer: any = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array',
+      cellDates: true
+    });
+  
+    const data: Blob = new Blob([excelBuffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8',
+    });
+  
+    const fileName = rawTitle.replace(/\s+/g, '_') + '.xlsx';
+    FileSaver.saveAs(data, fileName);
+  }
+  
 }
 
+//function saveAs(blob: Blob, arg1: string) {
+  //throw new Error('Function not implemented.');
+//}
+ 

@@ -1,0 +1,118 @@
+
+<section class="container-fluid  py-4">
+  <h3 class="mb-4 fw-bold">Profit LC Report</h3>    
+
+  <div class="row">
+    <div class="col-6 col-md-3">
+      <h6>From Date</h6>
+      <input type="date" [(ngModel)]="Fromd" [max]="Today"  id="fromd" name="fromd" class="form-control">
+    </div>
+    <div class="col-6 col-md-3">
+      <h6>To Date</h6>
+      <input type="date" class="form-control" [min]="Fromd"  [max]="Today" [(ngModel)]="Tod" id="Tod" name="Tod">
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="form-group">
+        <div class="form-group">
+          <h6>Branch</h6>
+          <select name="SctId" id="SctId" class="form-select" [(ngModel)]="SctId"  >
+            <option value="">All </option>
+            <option [value]="customer.SCT_ID" *ngFor="let customer of sctList">
+              {{ customer.SCT_NAME }}
+            </option>
+          </select>
+        </div>
+        
+      </div>
+    </div>
+    <div class="col-2  col-md-1" >
+
+      <button class="btn btn-outline-success active w-100"  (click)="getReport()"style="margin-top: 30px;"> <i class="fas fa-paper-plane"> </i></button>
+    </div>
+
+    <div class="col-4 col-md-1" >
+      <button class="btn btn-outline-danger active w-100"style="margin-top: 30px;" title="PDF" (click)="exportToPDF()">
+        <i class="fas fa-file-pdf"></i> 
+      </button>
+ </div>
+    <div class="col-4 col-md-1"  >
+      <button class="btn btn-outline-primary active w-100"style="margin-top: 30px;"  (click)="exportToExcel()" title="Excel"> 
+     
+        <i class="fas fa-file-excel"></i> 
+      </button>
+    </div>
+  </div>
+
+</section>
+
+<!-- <div class="responsive-table-wrapper mb-5" > -->
+
+  <!-- <h5 class="text-center fw-bold">Item Sales Report from {{ Fromd | date:'dd/MMM/yyyy'  }} to  {{ Tod |date:'dd/MMM/yyyy'}}</h5> -->
+ 
+ <!-- <div class="col-12 text-center" *ngIf="BillWiseReportData.length==0 ">
+  <h5 class="text-center">No Record Found!</h5>
+ </div> -->
+ <!-- </div> -->
+
+
+<div class="container mt-4">
+  <h5 class="text-center fw-bold">Profit LC Report from {{ Fromd | date:'dd/MMM/yyyy'  }} to  {{ Tod |date:'dd/MMM/yyyy'}}</h5>
+     
+  <table class="table table-bordered">
+    <tbody>
+      <!-- <tr>
+        <td class="border-cell fw-bold">REPORT NAME</td>
+        <td class="border-cell">PROFIT (LC)</td>
+      </tr> -->
+
+      <!-- Direct Income Section -->
+      <tr class="section-title">
+        <td colspan="2">Direct Income</td>
+      </tr>
+      <tr>
+        <td class="border-cell">Total Income (SalesRate)</td>
+        <td class="border-cell formula">
+          {{
+            ((SALE_NET_SR == undefined || SALE_NET_SR == null ? 0 : SALE_NET_SR) -
+             (SLRET_NET_SR == undefined || SLRET_NET_SR == null ? 0 : SLRET_NET_SR))
+            | number : '1.3-3'
+          }}
+          <!-- {{(SALE_NET_SR | number : '1.3-3') - (SLRET_NET_SR | number : '1.3-3') }}</td> -->
+      </tr>
+      <tr>
+        <td class="border-cell">Total Sales (SalesRate)</td>
+        <td class="border-cell">{{SALE_NET_SR | number : '1.3-3'}}</td>
+      </tr>
+      <tr>
+        <td class="border-cell">Total Sales Return (SalesRate)</td>
+        <td class="border-cell">{{SLRET_NET_SR | number : '1.3-3'}}</td>
+      </tr>
+
+      <!-- Direct Expenses Section -->
+      <tr class="section-title">
+        <td colspan="2">Direct Expenses</td>
+      </tr>
+      <tr>
+        <td class="border-cell">Total Expenses (LC)</td>
+        <td class="border-cell formula">
+          {{
+            ((SALE_NET_LC == undefined || SALE_NET_LC == null ? 0 : SALE_NET_LC) -
+             (SLRET_NET_LC == undefined || SLRET_NET_LC == null ? 0 : SLRET_NET_LC))
+            | number : '1.3-3'
+          }}
+        </td>
+        </tr>
+      <tr>
+        <td class="border-cell">Total Sales (LC)</td>
+        <td class="border-cell">{{SALE_NET_LC | number : '1.3-3'}}</td>
+      </tr>
+      <tr>
+        <td class="border-cell">Total Sales Return (LC)</td>
+        <td class="border-cell">{{SLRET_NET_LC| number : '1.3-3'}}</td>
+      </tr>
+
+      <!-- Final Profit -->
+      <tr class="section-title">
+        <td>Profit (LC)</td>
+        <td class="formula">{{PROFIT| number : '1.3-3'}}</td>
+      </tr>

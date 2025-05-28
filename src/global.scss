@@ -103,6 +103,10 @@ div:where(.swal2-container) .swal2-select {
 }
 
 
+.modal{
+  z-index: 10000;
+}
+
 html, body {
   height: 100%;
   overflow: auto; /* Enable scrolling */

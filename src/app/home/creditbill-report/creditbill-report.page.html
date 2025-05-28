@@ -5,15 +5,15 @@
       <h3 class="mb-4 fw-bold">Credit Bill Settlment Report</h3>    
     
       <div class="row">
-        <div class="col-2">
+        <div class="col-6 col-md-2">
           <h6>From Date</h6>
-          <input type="date" [(ngModel)]="Fromd" [max]="Today"   id="fromd"  name="fromd" class="form-control" >
+          <input type="date" [(ngModel)]="Fromd" [max]="Today" (change)="OnDateChange()"   id="fromd"  name="fromd" class="form-control" >
         </div>
-        <div class="col-2">
+        <div class="col-6 col-md-2">
           <h6>To Date</h6>
-          <input type="date" class="form-control" [min]="Fromd"  [max]="Today"  [(ngModel)]="Tod"  id="Tod" name="Tod">
+          <input type="date" class="form-control" [min]="Fromd"  [max]="Today" (change)="OnDateChange()"  [(ngModel)]="Tod"  id="Tod" name="Tod">
         </div>
-        <div class="col-3 position-relative">
+        <div class="col-6  col-md-3 position-relative">
   
   <h6>Customer</h6>
   <input type="text" class="form-control" placeholder="Search Customer" [(ngModel)]="customerSearchText" (input)="filterCustomers()" (focus)="showDropdown = true" (focusout)="showDropdown=false">
@@ -31,12 +31,12 @@
     
         
        
-          <div class="col-3">
+          <div class="col-6  col-md-2">
           <div class="form-group">
             <div class="form-group">
               <h6>Status</h6>
-              <select name="SelectedCallType" id="SelectedCallType" class="form-select" [(ngModel)]="SelectedStatus" (change)="onStatusChange($event)">
-                <option value="0">Select Status</option>
+              <select name="SelectedCallType" id="SelectedCallType" class="form-select" (change)="onStatusChange($event)" [(ngModel)]="SelectedStatus" >
+                <option value="All">All</option>
                 <option value="Pending">Pending</option>
                 <option value="Settled">Settled</option>
               </select>
@@ -46,15 +46,22 @@
         </div>
 
         
-        <div class="col-2 " >
-          <button class="btn btn-outline-success active"  (click)="getReport()"style="margin-top: 30px;"> <i class="fas fa-paper-plane"> </i></button>
+        <div class="col-4  col-md-1" >
+          <button class="btn btn-outline-success active w-100"  (click)="getReport()"style="margin-top: 30px;"> <i class="fas fa-paper-plane"> </i></button>
+        </div>
+        <div class="col-4 col-md-1" *ngIf="BillWiseReportData.length>0">
+          <button class="btn btn-outline-danger active w-100"style="margin-top: 30px;" title="PDF" (click)="exportToPDF()">
+            <i class="fas fa-file-pdf"></i> 
+          </button>
+     </div>
+        <div class="col-4 col-md-1"  *ngIf="BillWiseReportData.length>0">
+          <button class="btn btn-outline-primary active w-100"style="margin-top: 30px;"  title="Excel"(click)="exportToExcel()">
+            <i class="fas fa-file-excel"></i> 
+          </button>
         </div>
       </div>
 
-     <div class="row align-items-end">
-  <!-- Other columns like customer, date range, status, etc. -->
-
-  <!-- Export buttons column aligned to right -->
+     <!-- <div class="row align-items-end">
   <div class="col-2 ms-auto d-flex justify-content-end gap-2">
      
   <button class="btn btn-outline-danger" (click)="exportToPDF()">
@@ -64,10 +71,12 @@
     <i class="fas fa-file-excel"></i> Excel
   </button>
   </div>
-</div>
+</div> -->
         
     
     <div class="responsive-table-wrapper mb-5" >
+      <h5 class="text-center fw-bold">Credit Bill Settlement Report  {{SelectedCustName==''?'':' of '+SelectedCustName  }}  from {{ Fromd | date:'dd/MMM/yyyy'  }} to  {{ Tod |date:'dd/MMM/yyyy'}}</h5>
+     
      
       <div class="table-container">
         <table class="custom-table">
@@ -92,14 +101,14 @@
               <td >{{ items.SALE_CUST_NAME }}</td>
               
               <td>{{ items.TRANS_TYPE}}</td>
-              <td class="text-center">{{ items.BILL_AMT}} </td>
-              <td class="text-center">{{ items.SETTLED_AMT }} </td>
-              <td class="text-center" *ngIf="SelectedStatus === 'Pending'">{{ items.BALC_AMT }} </td>
+              <td class="text-center">{{ items.BILL_AMT  |number:'1.3-3'}} </td>
+              <td class="text-center">{{ items.SETTLED_AMT  |number:'1.3-3'}} </td>
+              <td class="text-center" *ngIf="SelectedStatus === 'Pending'">{{ items.BALC_AMT  |number:'1.3-3'}} </td>
             </tr>
           
           </tbody>
-          <tfoot>
-            <tr>
+          <tfoot *ngIf="BillWiseReportData.length>0">
+            <tr >
               <td colspan="5" class="text-end fw-bold">Total</td>
               <td class="text-center fw-bold">{{ getTotal('BILL_AMT') |number:'1.3-3'}}</td>
               <td class="text-center fw-bold">{{ getTotal('SETTLED_AMT') |number:'1.3-3' }}</td>
@@ -112,12 +121,12 @@
             
           <!-- </tbody> -->
         </table>
-        <!-- <div class="row m-3" *ngIf="BillWiseReportData.length==0">
+        <div class="row m-3" *ngIf="BillWiseReportData.length==0">
           <div class="col-12 ">
             <h4 class="text-center">No Record Found!</h4>
     
           </div>
-        </div> -->
+        </div>
       </div>
     
     </div>
@@ -156,8 +165,8 @@
                         <td style="text-align: center;">{{items.UNIT_CODE }}</td>
                         <td style="text-align: center;">{{items.SALE_BILL_NO }}</td>
                         <td style="text-align: center;">{{items.SALE_QTY }}</td>
-                        <td style="text-align: center;">{{items.SLDT_RATE }}</td>
-                        <td style="text-align: center;">{{items.SLDT_NET_AMT}}</td>
+                        <td style="text-align: center;">{{items.SLDT_RATE |number:'1.3-3'}}</td>
+                        <td style="text-align: center;">{{items.SLDT_NET_AMT|number:'1.3-3'}}</td>
                        
                     </tr>
                 
