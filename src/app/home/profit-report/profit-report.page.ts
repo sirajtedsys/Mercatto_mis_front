@@ -110,7 +110,7 @@ export class ProfitReportPage implements OnInit {
           if(data.Data.length>0)
           {
             this.SALE_NET_SR= data.Data[0].SALE_NET_SR
-            this.SLRET_NET_SR= data.Data[0].SALE_NET_LC
+            this.SLRET_NET_SR= data.Data[0].SLRET_NET_SR
             this. SALE_NET_LC= data.Data[0].SALE_NET_LC
             this.SLRET_NET_LC= data.Data[0].SLRET_NET_LC
             this. PROFIT= data.Data[0].PROFIT

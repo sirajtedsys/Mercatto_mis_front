@@ -41,7 +41,8 @@ export class CustomerAgingReportPage implements OnInit {
     this.Tod=this.Today
     this.GetDepartment()
     // this.CustId='1210000001'
-   this.GetCustomer( this.Fromd, this.Tod)
+   this.GetCustomer(this.datepipe.transform(this.Fromd,'dd/MM/yyyy'),
+   this.datepipe.transform(this.Tod,'dd/MM/yyyy'),this.CustId,this.SctId)
 
   }
 
@@ -129,18 +130,19 @@ export class CustomerAgingReportPage implements OnInit {
     type=='from'?this.Fromd=this.datepipe.transform(event.target.value,'yyyy-MM-dd'):this.Tod=this.datepipe.transform(event.target.value,'yyyy-MM-dd')
     if(this.Fromd<this.Tod)
     {
-      this.GetCustomer(this.Fromd,this.Tod)
+      this.GetCustomer(this.datepipe.transform(this.Fromd,'dd/MM/yyyy'),
+      this.datepipe.transform(this.Tod,'dd/MM/yyyy'),this.CustId,this.SctId)
     }
   }
 
-  async GetCustomer(fromDate:any,toDate:any){
+  async GetCustomer(fromDate:any,toDate:any,custid:any,SctId:any){
     const loading = await this.loadingCtrl.create({
       cssClass: 'custom-loading',
       message: 'Loading...',
       spinner: 'dots',
    });
     await loading.present();
-    this.repser.GetCustomer(fromDate,toDate).subscribe((data:any)=>{
+    this.repser.GetCustomerAging(fromDate,toDate,custid,SctId).subscribe((data:any)=>{
       loading.dismiss()
      console.log(data);
       
@@ -149,13 +151,17 @@ export class CustomerAgingReportPage implements OnInit {
       {
         if(data.Data.length>0)
         {
-          console.log(data);
-          // this.CustId=data.Data[0].CUST_ID
-        //  this.GetAllUserRightsTab(data.MenuGroupId)
-          this.CustomerList=data.Data
-          this.filteredCustomerList=data.Data
-          // this.customerSearchText = data.Data[0].CUST_NAME
-          // this.getReport()
+          for(let i=0;i<data.Data.length;i++)
+            {
+              if(!this.CustomerList.some((x:any)=>x.CUST_ID==data.Data[i].CUST_ID))
+              {
+                let obj = {CUST_ID:data.Data[i].CUST_ID,CUST_NAME:data.Data[i].CUST_NAME}
+                this.CustomerList.push(obj)
+                this.filteredCustomerList.push(obj)
+    
+              }
+            
+            }
         }
         else
         {
@@ -178,7 +184,8 @@ export class CustomerAgingReportPage implements OnInit {
 
   onDateChange() {
     if (this.Fromd && this.Tod) {
-      this.GetCustomer(this.Fromd, this.Tod);
+      this.GetCustomer(this.datepipe.transform(this.Fromd,'dd/MM/yyyy'),
+      this.datepipe.transform(this.Tod,'dd/MM/yyyy'),this.CustId,this.SctId);
     }
   }
 customerSearchText: string = '';
@@ -201,7 +208,7 @@ capitalizeFirstLetter(name: string): string {
   return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 }
 exportToExcel(): void {
-  const rawTitle =' Customr Aging Report from ' +
+  const rawTitle =' Customr Ageing Report from ' +
     this.datepipe.transform(this.Fromd, 'dd/MMM/yyyy') +
     ' to ' + this.datepipe.transform(this.Tod, 'dd/MMM/yyyy');
 
@@ -284,7 +291,7 @@ exportToExcel(): void {
 exportToPDF(): void {
   const doc = new jsPDF();
 
-  const rawTitle = ' Customr Aging Report from ' +
+  const rawTitle = ' Customr Ageing Report from ' +
     this.datepipe.transform(this.Fromd, 'dd/MMM/yyyy') +
     ' to ' + this.datepipe.transform(this.Tod, 'dd/MMM/yyyy'); // fixed: was using Fromd twice
 
@@ -308,20 +315,15 @@ exportToPDF(): void {
   // doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, currentY);
   // currentY += 8;
 
-  const columns = [
-      '#','Item Name', 'Unit Code', 'Sale Qty', 'RTN Qty', 'Net Sale Qty', 'Sale Amount', 'RTN Net Amount', 'Net Amount'
-  ];
-
+  const columns = ['#', 'Customer', '30', '60', '90', '120', 'ABOVE 120'];
   const rows = this.BillWiseReportData.map((item, index) => [
         index + 1,
-        item.ITEM_NAME,
-        item.UNIT_CODE,
-        item.SALE_QTY,
-        item.RTN_QTY,
-        item.NET_SALE_QTY,
-        item.SALE_AMOUNT,
-        item.RTN_NET_AMT,
-        item.NET_AMT
+        item.CUST_NAME,
+        item["'30'"],
+        item["'60'"],
+        item["'90'"],
+        item["'120'"],
+        item["'ABOVE 120'"]
   ]);
 
   autoTable(doc, {
@@ -332,6 +334,20 @@ exportToPDF(): void {
 
   const fileName = rawTitle.replace(/\s+/g, '_') + '.pdf';
   doc.save(fileName);
+}
+
+
+getTotalForMonth(monthKey: string): number {
+  let total = 0;
+
+  for (const item of this.BillWiseReportData) {
+    const value = item[monthKey];
+    if (value != null && !isNaN(value)) {
+      total += parseFloat(value);
+    }
+  }
+    let t = Number(total.toFixed(3));
+  return t;
 }
 
  async GetDepartment()

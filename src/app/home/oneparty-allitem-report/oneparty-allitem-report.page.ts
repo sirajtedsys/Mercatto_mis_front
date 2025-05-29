@@ -37,7 +37,8 @@ export class OnepartyAllitemReportPage implements OnInit {
     this.Tod=this.Today
     this.GetDepartment()
     // this.CustId='1210000001'
-   this.GetCustomer( this.Fromd, this.Tod)
+   this.GetCustomer(this.datepipe.transform(this.Fromd,'dd/MM/yyyy'),
+   this.datepipe.transform(this.Tod,'dd/MM/yyyy'),this.CustId,this.SctId)
 
   }
 
@@ -140,18 +141,19 @@ export class OnepartyAllitemReportPage implements OnInit {
     type=='from'?this.Fromd=this.datepipe.transform(event.target.value,'yyyy-MM-dd'):this.Tod=this.datepipe.transform(event.target.value,'yyyy-MM-dd')
     if(this.Fromd<this.Tod)
     {
-      this.GetCustomer(this.Fromd,this.Tod)
+      this.GetCustomer(this.datepipe.transform(this.Fromd,'dd/MM/yyyy'),
+      this.datepipe.transform(this.Tod,'dd/MM/yyyy'),this.CustId,this.SctId)
     }
   }
 
-  async GetCustomer(fromDate:any,toDate:any){
+  async GetCustomer(fromDate:any,toDate:any,custid:any,SctId:any){
     const loading = await this.loadingCtrl.create({
       cssClass: 'custom-loading',
       message: 'Loading...',
       spinner: 'dots',
    });
     await loading.present();
-    this.repser.GetCustomer(fromDate,toDate).subscribe((data:any)=>{
+    this.repser.Getonepartyallitemwise(fromDate,toDate,custid,SctId).subscribe((data:any)=>{
       loading.dismiss()
      console.log(data);
       
@@ -160,13 +162,17 @@ export class OnepartyAllitemReportPage implements OnInit {
       {
         if(data.Data.length>0)
         {
-          console.log(data);
-          // this.CustId=data.Data[0].CUST_ID
-        //  this.GetAllUserRightsTab(data.MenuGroupId)
-          this.CustomerList=data.Data
-          this.filteredCustomerList=data.Data
-          // this.customerSearchText = data.Data[0].CUST_NAME
-          // this.getReport()
+          for(let i=0;i<data.Data.length;i++)
+            {
+              if(!this.CustomerList.some((x:any)=>x.CUST_ID==data.Data[i].CUST_ID))
+              {
+                let obj = {CUST_ID:data.Data[i].CUST_ID,CUST_NAME:data.Data[i].CUST_NAME}
+                this.CustomerList.push(obj)
+                this.filteredCustomerList.push(obj)
+    
+              }
+            
+            }
         }
         else
         {
@@ -189,7 +195,9 @@ export class OnepartyAllitemReportPage implements OnInit {
 
   onDateChange() {
     if (this.Fromd && this.Tod) {
-      this.GetCustomer(this.Fromd, this.Tod);
+      this.GetCustomer(this.datepipe.transform(this.Fromd,'dd/MM/yyyy'),
+      this.datepipe.transform(this.Tod,'dd/MM/yyyy'),this.CustId,this.SctId)
+      ;
     }
   }
 customerSearchText: string = '';
@@ -211,8 +219,8 @@ filterCustomers() {
   {
 
     this.filteredCustomerList = this.CustomerList
-    .filter(c => c.CUST_NAME.toLowerCase().includes(search))
-    .sort((a, b) => a.CUST_NAME.tostring().localeCompare(b.CUST_NAME));
+    .filter(c => c.CUST_NAME.toString().toLowerCase().includes(search))
+    .sort((a, b) => a.CUST_NAME.toString().localeCompare(b.CUST_NAME));
   }
   
 

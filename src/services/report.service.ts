@@ -844,7 +844,7 @@ export class ReportService {
           catchError((error: any) => {
             this.CheckForUnAuthorised(error)
             // Handle the error here or rethrow it as needed
-            console.error('Error in GetCustomer:', error);
+            console.error('Error in GetDepartment:', error);
             return throwError(error); // Rethrow the error
           })
         );

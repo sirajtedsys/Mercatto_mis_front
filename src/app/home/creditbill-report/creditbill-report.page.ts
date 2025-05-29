@@ -199,80 +199,16 @@ selectCustomer(customer: any) {
   this.customerSearchText=customer.CUST_NAME
   this.CustId=customer.CUST_ID
   this.SelectedCustName=customer.CUST_NAME
-  // this.BillWiseReportData = this.BillWiseReportDatafilter.
-  //  this.GetCreditbill(this.datepipe.transform(this.Fromd,'dd/MM/yyyy'),this.datepipe.transform(this.Tod,'dd/MM/yyyy'),customer.CUST_ID)
-   
   
-  // this.customerSearchText = customer.CUST_NAME;
-  // this.showDropdown = false;
-
-  // // If the selected customer is newly typed, save it to the main list
-  // if (!this.CustomerList.some(c => c.CUST_NAME.toLowerCase() === customer.CUST_NAME.toLowerCase())) {
-  //   this.CustomerList.push({ CUST_NAME: customer.CUST_NAME });
-  //   // Re-sort the main list
-  //   this.CustomerList.sort((a, b) => a.CUST_NAME.localeCompare(b.CUST_NAME));
-  // }
 }
 
-// hideDropdown() {
-//   // Delay to allow click selection
-//   setTimeout(() => {
-//     this.showDropdown = false;
-//   }, 200);
-// }
+
 
 capitalizeFirstLetter(name: string): string {
   return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 }
 
-// exportToPDF() {
-//   const doc = new jsPDF();
 
-//   const headers = [['#', 'Bill No', 'Bill Date', 'Customer', 'Trans Type', 'Bill Amt', 'Settled Amt', ...(this.SelectedStatus === 'Pending' ? ['Balance'] : [])]];
-  
-//   const data = this.BillWiseReportData.map((item, index) => {
-//     const row = [
-//       index + 1,
-//       item.BILL_NO,
-//       this.datepipe.transform(item.BILL_DATE, 'dd-MMM-yyyy'),
-//       item.SALE_CUST_NAME,
-//       item.TRANS_TYPE,
-//       item.BILL_AMT,
-//       item.SETTLED_AMT
-//     ];
-//     if (this.SelectedStatus === 'Pending') {
-//       row.push(item.BALC_AMT);
-//     }
-//     return row;
-//   });
-
-//   autoTable(doc, {
-//     head: headers,
-//     body: data
-//   });
-
-//   doc.save('CreditBillReport.pdf');
-// }
-
-// Export to Excel
-// exportToExcel() {
-//   const exportData = this.BillWiseReportData.map((item, index) => ({
-//     '#': index + 1,
-//     'Bill No': item.BILL_NO,
-//     'Bill Date': this.datepipe.transform(item.BILL_DATE, 'dd-MMM-yyyy'),
-//     'Customer': item.SALE_CUST_NAME,
-//     'Trans Type': item.TRANS_TYPE,
-//     'Bill Amt': item.BILL_AMT,
-//     'Settled Amt': item.SETTLED_AMT,
-//     ...(this.SelectedStatus === 'Pending' && { 'Balance': item.BALC_AMT })
-//   }));
-
-//   const worksheet = XLSX.utils.json_to_sheet(exportData);
-//   const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
-//   const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-//   const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
-//  // saveAs(blob, 'CreditBillReport.xlsx');
-// }
  async GetCustomer(fromDate:any,toDate:any){
     const loading = await this.loadingCtrl.create({
       cssClass: 'custom-loading',
@@ -280,7 +216,7 @@ capitalizeFirstLetter(name: string): string {
       spinner: 'dots',
     });
     await loading.present();
-    this.repser.GetCustomer(fromDate,toDate).subscribe((data:any)=>{
+    this.repser.GetCreditbill(this.datepipe.transform(fromDate,'dd/MM/yyyy'),this.datepipe.transform(toDate,'dd/MM/yyyy'),'').subscribe((data:any)=>{
       loading.dismiss()
       console.log(data);
       
@@ -292,9 +228,18 @@ capitalizeFirstLetter(name: string): string {
           console.log(data);
           // this.CustId=data.Data[0].CUST_ID
         //  this.GetAllUserRightsTab(data.MenuGroupId)
-          this.CustomerList=data.Data
+        for(let i=0;i<data.Data.length;i++)
+        {
+          if(!this.CustomerList.some((x:any)=>x.CUST_ID==data.Data[i].CUST_ID))
+          {
+            let obj = {CUST_ID:data.Data[i].CUST_ID,CUST_NAME:data.Data[i].SALE_CUST_NAME}
+            this.CustomerList.push(obj)
+            this.filteredCustomerList.push(obj)
 
-          this.filteredCustomerList=data.Data
+          }
+        
+        }
+
           //console.log(this.CustomerList,this.filteredCustomerList);
           // this.customerSearchText
           
