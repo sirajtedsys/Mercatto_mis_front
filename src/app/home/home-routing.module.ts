@@ -54,9 +54,15 @@ const routes: Routes = [
     path: 'customer-aging-report',
     loadChildren: () => import('./customer-aging-report/customer-aging-report.module').then( m => m.CustomerAgingReportPageModule)
   },
+  {
+    path: 'supplier-ageing-report',
+    loadChildren: () => import('./supplier-ageing-report/supplier-ageing-report.module').then( m => m.SupplierAgeingReportPageModule)
+  },
      
     ]
   },
+ 
+
 
 
  

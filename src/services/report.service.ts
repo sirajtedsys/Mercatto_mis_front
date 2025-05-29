@@ -1082,4 +1082,50 @@ export class ReportService {
           })
         );
       }
+
+
+
+
+      GetSupplierAging(fromDate: any, toDate: any, CustId: any, sctid: any){
+
+        this.GetDecryptedData() 
+        let headers = new HttpHeaders();
+        headers.set("Accept", 'application/json');
+        headers.set('Content-Type', 'application/json');
+        headers = headers.set('Authorization', 'Bearer ' + this.decryptiondata); 
+        let options ={ headers: headers };
+        return this.http.get(this.appconfig.url + '/Sales/GetSupplierAging?fromDate='+fromDate+
+          '&toDate='+toDate+'&CustId='+CustId+'&sctid='+sctid, options)
+        .pipe(
+          
+          catchError((error: any) => {
+            this.CheckForUnAuthorised(error)
+            // Handle the error here or rethrow it as needed
+            console.error('Error in GetOneitemwAllparties:', error);
+            return throwError(error); // Rethrow the error
+          })
+        );
+      }
+
+
+      GetSuppAgingDtls(fromDate: any, toDate: any, CustId: any, sctid: any){
+
+        this.GetDecryptedData() 
+        let headers = new HttpHeaders();
+        headers.set("Accept", 'application/json');
+        headers.set('Content-Type', 'application/json');
+        headers = headers.set('Authorization', 'Bearer ' + this.decryptiondata); 
+        let options ={ headers: headers };
+        return this.http.get(this.appconfig.url + '/Sales/GetSuppAgingDtls?fromDate='+fromDate+
+          '&toDate='+toDate+'&CustId='+CustId+'&sctid='+sctid, options)
+        .pipe(
+          
+          catchError((error: any) => {
+            this.CheckForUnAuthorised(error)
+            // Handle the error here or rethrow it as needed
+            console.error('Error in GetCustomerAgingDtls:', error);
+            return throwError(error); // Rethrow the error
+          })
+        );
+      }
 }
