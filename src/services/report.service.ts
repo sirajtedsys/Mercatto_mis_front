@@ -1086,7 +1086,7 @@ export class ReportService {
 
 
 
-      GetSupplierAging(fromDate: any, toDate: any, CustId: any, sctid: any){
+      GetSupplierAging(fromDate: any, toDate: any, SuppId: any, sctid: any){
 
         this.GetDecryptedData() 
         let headers = new HttpHeaders();
@@ -1095,7 +1095,7 @@ export class ReportService {
         headers = headers.set('Authorization', 'Bearer ' + this.decryptiondata); 
         let options ={ headers: headers };
         return this.http.get(this.appconfig.url + '/Sales/GetSupplierAging?fromDate='+fromDate+
-          '&toDate='+toDate+'&CustId='+CustId+'&sctid='+sctid, options)
+          '&toDate='+toDate+'&SuppId='+SuppId+'&sctid='+sctid, options)
         .pipe(
           
           catchError((error: any) => {
@@ -1108,7 +1108,7 @@ export class ReportService {
       }
 
 
-      GetSuppAgingDtls(fromDate: any, toDate: any, CustId: any, sctid: any){
+      GetSuppAgingDtls(fromDate: any, toDate: any, SuppId: any, sctid: any){
 
         this.GetDecryptedData() 
         let headers = new HttpHeaders();
@@ -1117,7 +1117,7 @@ export class ReportService {
         headers = headers.set('Authorization', 'Bearer ' + this.decryptiondata); 
         let options ={ headers: headers };
         return this.http.get(this.appconfig.url + '/Sales/GetSuppAgingDtls?fromDate='+fromDate+
-          '&toDate='+toDate+'&CustId='+CustId+'&sctid='+sctid, options)
+          '&toDate='+toDate+'&SuppId='+SuppId+'&sctid='+sctid, options)
         .pipe(
           
           catchError((error: any) => {

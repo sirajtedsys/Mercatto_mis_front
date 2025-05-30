@@ -271,9 +271,9 @@ exportToExcel(): void {
  
   
 
-  const rawTitle = this.SelectedCustName === ''
+  const rawTitle = (this.SelectedCustName === ''
     ? 'One Party'
-    : this.SelectedCustName + ' All Item Report from ' +
+    : this.SelectedCustName) + ' All Item Report from ' +
       this.datepipe.transform(this.Fromd, 'dd/MMM/yyyy') +
       ' to ' + this.datepipe.transform(this.Tod, 'dd/MMM/yyyy'); 
 
@@ -360,9 +360,9 @@ exportToExcel(): void {
 exportToPDF(): void {
   const doc = new jsPDF();
 
-  const rawTitle = this.SelectedCustName === ''
+  const rawTitle = (this.SelectedCustName === ''
     ? 'One Party'
-    : this.SelectedCustName + ' All Item Report from ' +
+    : this.SelectedCustName) + ' All Item Report from ' +
       this.datepipe.transform(this.Fromd, 'dd/MMM/yyyy') +
       ' to ' + this.datepipe.transform(this.Tod, 'dd/MMM/yyyy'); // fixed: was using Fromd twice
 
@@ -405,7 +405,26 @@ exportToPDF(): void {
   autoTable(doc, {
     head: [columns],
     body: rows,
-    startY: currentY
+    startY: currentY,
+    styles: {
+      lineColor: [0, 0, 0], // black
+      lineWidth: 0.2,
+      cellPadding: 3,
+      halign: 'center',
+      valign: 'middle'
+    },
+    headStyles: {
+      fillColor: [230, 230, 230], // light gray background for header
+      textColor: 0,
+      fontStyle: 'bold',
+      lineColor: [0, 0, 0],
+      lineWidth: 0.2
+    },
+    bodyStyles: {
+      lineColor: [0, 0, 0],
+      lineWidth: 0.2
+    },
+    theme: 'grid' // ensures borders for all cells
   });
 
   const fileName = rawTitle.replace(/\s+/g, '_') + '.pdf';

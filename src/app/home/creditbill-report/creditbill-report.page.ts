@@ -37,16 +37,28 @@ export class CreditbillReportPage implements OnInit {
     this.Fromd=this.Today
     this.Tod=this.Today
     // this.CustId='1210000001'
-    this.GetCustomer( this.Fromd, this.Tod)
+    // this.GetCustomer( this.Fromd, this.Tod)
+    this.OnDateChange()
 
   }
 
   ngOnInit() {
     
   }
+
+  getreportsperseelcted(){
+    if(this.SelectedStatus=='Pending')
+    {
+      this.getReport()
+    }
+    else
+    {
+      this.getReportSettled()
+    }
+  }
  
   getReport(){
-    this.GetCustomer(this.Fromd,this.Tod)
+    // this.GetCustomer(this.Fromd,this.Tod)
     this.GetCreditbill(this.datepipe.transform(this.Fromd,'dd/MM/yyyy'),this.datepipe.transform(this.Tod,'dd/MM/yyyy'),this.CustId)
     // this.GetBillwiseSale(this.datepipe.transform(this.Fromd,'dd/MM/yyyy'),this.datepipe.transform(this.Tod,'dd/MM/yyyy'))
   }
@@ -209,7 +221,7 @@ capitalizeFirstLetter(name: string): string {
 }
 
 
- async GetCustomer(fromDate:any,toDate:any){
+ async GetCustomerFromCreditBillPending(fromDate:any,toDate:any){
     const loading = await this.loadingCtrl.create({
       cssClass: 'custom-loading',
       message: 'Loading...',
@@ -265,9 +277,74 @@ capitalizeFirstLetter(name: string): string {
     loading.dismiss()
   })                               
 }
+
+async GetCustomerFromCreditBillSettled(fromDate:any,toDate:any){
+  const loading = await this.loadingCtrl.create({
+    cssClass: 'custom-loading',
+    message: 'Loading...',
+    spinner: 'dots',
+  });
+  await loading.present();
+  this.repser.GetCreditbillSettled(this.datepipe.transform(fromDate,'dd/MM/yyyy'),this.datepipe.transform(toDate,'dd/MM/yyyy'),'').subscribe((data:any)=>{
+    loading.dismiss()
+    console.log(data);
+    
+    // this.comser.dismissLoading();
+    if(data.Status==200)
+    {
+      if(data.Data.length>0)
+      {
+        console.log(data);
+        // this.CustId=data.Data[0].CUST_ID
+      //  this.GetAllUserRightsTab(data.MenuGroupId)
+      for(let i=0;i<data.Data.length;i++)
+      {
+        if(!this.CustomerList.some((x:any)=>x.CUST_ID==data.Data[i].CUST_ID))
+        {
+          let obj = {CUST_ID:data.Data[i].CUST_ID,CUST_NAME:data.Data[i].CUSTOMER_NAME}
+          this.CustomerList.push(obj)
+          this.filteredCustomerList.push(obj)
+
+        }
+      
+      }
+
+        //console.log(this.CustomerList,this.filteredCustomerList);
+        // this.customerSearchText
+        
+        
+      }
+      else
+      {
+        this.CustomerList=[]
+       // this.filteredCustomerList=[]
+        this.BillWiseReportData = [];
+        
+      }
+
+    }
+    else
+    {
+        this.CustomerList=[]
+     // this.getReport()
+    }
+  },
+(error:any)=>{
+  // this.comser.dismissLoading()
+  loading.dismiss()
+})                               
+}
  OnDateChange () {
     if (this.Fromd && this.Tod) {
-      this.GetCustomer(this.Fromd, this.Tod);
+      if(this.SelectedStatus=='Pending')
+      {
+
+        this.GetCustomerFromCreditBillPending(this.Fromd, this.Tod);
+      }
+      else
+      {
+        this.GetCustomerFromCreditBillSettled(this.Fromd, this.Tod)
+      }
     }
   }
  getTotal(key: string): number {
@@ -282,20 +359,17 @@ capitalizeFirstLetter(name: string): string {
   onStatusChange(event: any): void {
     const selectedValue =event.target.value;
     if (selectedValue === 'Pending') {
-      // this.SelectedStatus='Pending'
+      this.SelectedStatus='Pending'
       // this.getReport();
-      this.BillWiseReportData = this.BillWiseReportDatafilter.filter((x:any)=>x.SETTLED_AMT != x.BILL_AMT)
+      // this.BillWiseReportData = this.BillWiseReportDatafilter.filter((x:any)=>x.SETTLED_AMT != x.BILL_AMT)
     }
     else if (selectedValue === 'Settled') {
-      //  this.SelectedStatus='Settled'
+       this.SelectedStatus='Settled'
       // this.getReportSettled();
       
-      this.BillWiseReportData = this.BillWiseReportDatafilter.filter((x:any)=>x.SETTLED_AMT == x.BILL_AMT)
+      // this.BillWiseReportData = this.BillWiseReportDatafilter.filter((x:any)=>x.SETTLED_AMT == x.BILL_AMT)
     }
-    else
-    {
-        this.BillWiseReportData = this.BillWiseReportDatafilter
-    }
+   
   }
 
   // OnStatusChange(event:any)
@@ -363,7 +437,26 @@ capitalizeFirstLetter(name: string): string {
     autoTable(doc, {
       head: [columns],
       body: data,
-      startY: currentY
+      startY: currentY,
+      styles: {
+        lineColor: [0, 0, 0], // black
+        lineWidth: 0.2,
+        cellPadding: 3,
+        halign: 'center',
+        valign: 'middle'
+      },
+      headStyles: {
+        fillColor: [230, 230, 230], // light gray background for header
+        textColor: 0,
+        fontStyle: 'bold',
+        lineColor: [0, 0, 0],
+        lineWidth: 0.2
+      },
+      bodyStyles: {
+        lineColor: [0, 0, 0],
+        lineWidth: 0.2
+      },
+      theme: 'grid' // ensures borders for all cells
     });
   
     const fileName = rawTitle.replace(/\s+/g, '_') + '.pdf';
@@ -389,8 +482,9 @@ capitalizeFirstLetter(name: string): string {
       'Transaction Type': item.TRANS_TYPE,
       'Bill Amount': item.BILL_AMT,
       'Settled Amount': item.SETTLED_AMT,
-      'Balance': item.BALC_AMT
+      ...(this.SelectedStatus === 'Pending' ? { 'Balance': item.BALC_AMT } : {})
     }));
+    
   
     // Convert JSON to array of arrays
     const header = Object.keys(exportData[0]);
