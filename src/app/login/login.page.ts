@@ -45,7 +45,8 @@ export class LoginPage implements OnInit {
    }
 
   ngOnInit() {
-
+    console.log();
+    
   }
 
   async GetAllUserSection() {  

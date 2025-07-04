@@ -33,6 +33,18 @@ export class AuthService {
 
   }
  
+   CheckForUnAuthorised(error:any){
+    if(error.status==401)
+    {
+      // window.location.reload()
+      // localStorage.clear()
+      
+      // this.router.navigate(['login'])
+      // this.logoutfn
+      this.Logoutfn()
+    }
+
+  }
 
   EncryptToken(dataToencrypt:string)
   {  

@@ -24,15 +24,15 @@
           <table class="table table-hover" id="dataTable">
             <thead class="table-dark">
               <tr>
-                <th *ngIf="CheckType=='radio'">#</th>
-                <th *ngIf="CheckType=='check'"><input class="cpoint" type="checkbox" [checked]="SelectedList==filteredData" (change)="SelectAll($event)"></th>
+                <th *ngIf="CheckType==='radio'">#</th>
+                <th *ngIf="CheckType==='check'"><input class="cpoint" type="checkbox" [checked]="SelectedList===filteredData" (change)="SelectAll($event)"></th>
                 <th *ngFor="let items of Headers">{{items}}</th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let lists of filteredData;let i =index">
+              <tr *ngFor="let lists of filteredData;let i =index" >
                 <td  ><input type="checkbox"class="cpoint" [checked]="SelectedList.includes(lists)" (change)="SingleSelection($event,lists)"></td>
-                <td *ngFor="let items of Fields">{{lists[items]}}</td>
+                <td *ngFor="let items of Fields" >{{lists[items]}} </td>
               </tr>
          
             </tbody>

@@ -14,7 +14,7 @@ export class CommonModalPage implements OnInit {
   @Input() Headers:any[]=[]
   @Input() Fields:any[]=[]
   @Input() ModalHeader:string='Header'
-  @Input() CheckType=  'radio' || 'check'
+  @Input() CheckType:  'radio' | 'check'='radio'
   @Input() UniqueField = ''
   @Input() SelectedItems:any[]=[]
   searchQuery: string='';
@@ -78,6 +78,7 @@ export class CommonModalPage implements OnInit {
       {
         this.SelectedList=[]
         this.SelectedList.push(item)
+        this.Save()
         // this.SelectedLis
       }
       else

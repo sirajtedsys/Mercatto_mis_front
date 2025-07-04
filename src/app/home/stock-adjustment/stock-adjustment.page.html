@@ -1,0 +1,114 @@
+<nav class="navbar navbar-custom d-flex justify-content-between align-items-center">
+    <a *ngIf="showBackButton" (click)="showSearchScreenView()" class="ms-3"><i class="fas fa-arrow-left fa-lg"></i></a>
+    <span *ngIf="!showBackButton" class="ms-3" style="width: 24px;"></span> <span class="navbar-brand mb-0 h1 text-white mx-auto">{{ navbarTitle }}</span>
+    <!-- <div class="me-3">
+        <small>{{ currentTime }}</small> <i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i>
+    </div> -->
+</nav>
+<!-- <div class="container mt-2">
+  <div class="row">
+    <div class="col-md-12 text-center" >
+      <h4 >Stock Adjustment</h4>
+    </div>
+  </div>
+  
+</div> -->
+
+<div class="container-fluid py-4">
+
+    <div *ngIf="showSearchScreen" class="search-section">
+        <div class="text-center mb-4">
+            <h6 class="mb-3">SEARCH ITEM</h6>
+            <div class="date-range-text">
+                {{StartDate | date:'dd MMM yyyy'}} - {{ToDate | date:'dd MMM yyyy'}}
+            </div>
+        </div>
+
+        <div class="form-check mb-4">
+            <input class="form-check-input text-center" type="checkbox" id="showNillStock" [(ngModel)]="showNillStock">
+            <label class="form-check-label" for="showNillStock">
+                Show Nill Stock
+            </label>
+        </div>
+
+    <div class="row g-3 mb-4"> <div class="col-12 col-md-4 position-relative"> <label for="itemBarcode" class="form-label visually-hidden">Item Barcode</label>
+            <input type="text" class="form-control py-3" id="itemBarcode" (input)="OnEnteringOtherFields('barcode')" placeholder="Item Barcode" [(ngModel)]="itemBarcode">
+        </div>
+
+        <div class="col-12 col-md-4 position-relative">
+            <label for="itemName" class="form-label visually-hidden">Item Name</label>
+            <input type="text" class="form-control py-3"  (click)="OpenitemModal()" id="itemName" placeholder="Item Name" [(ngModel)]="itemName">
+            </div>
+
+        <div class="col-12 col-md-4 position-relative">
+            <label for="itemCode" class="form-label visually-hidden">Item Code</label>
+            <input type="text" class="form-control py-3" (input)="OnEnteringOtherFields('code')" id="itemCode" placeholder="Item Code" [(ngModel)]="itemCode">
+        </div>
+    </div>
+
+       <div class="d-flex justify-content-center gap-2 mb-4">
+    <button class="btn btn-custom-clear flex-fill py-3" type="button" (click)="onClear()">CLEAR</button>
+    <button class="btn btn-custom-search flex-fill py-3" type="button" (click)="GetItemDetailsAsync()">SEARCH</button>
+</div>
+
+        <div class="scan-section">
+            <button class="btn btn-link text-decoration-none p-0" type="button" (click)="onScan()">
+                <i class="fas fa-barcode"></i>
+                <h5 class="mt-2 text-dark">SCAN</h5>
+            </button>
+        </div>
+
+       
+    </div>
+
+    <div *ngIf="!showSearchScreen" class="details-section">
+        <div class="item-card" *ngFor="let item of items; let i = index">
+            <div class="item-row">
+                <div class="item-label">Code</div>
+                <div class="item-value">: {{ item.StockAdjustmentDetails.ITEM_CODE }}</div>
+            </div>
+            <div class="item-row">
+                <div class="item-label">Name</div>
+                <div class="item-value">: {{ item.StockAdjustmentDetails.ITEM_NAME }}</div>
+            </div>
+            <div class="item-row">
+                <div class="item-label">Unit</div>
+                <div class="item-value">: {{ item.StockAdjustmentDetails.UNIT_CODE }}</div>
+            </div>
+            <!-- <div class="item-row">
+                <div class="item-label">Type</div>
+                <div class="item-value">: {{ item. }}</div>
+            </div> -->
+            <div class="item-row">
+                <div class="item-label">Batch</div>
+                <div class="item-value">: {{ item.StockAdjustmentDetails.BatchCode }}</div>
+            </div>
+            <div class="item-row">
+                <div class="item-label">Sl. Rate</div>
+                <div class="item-value">:  {{ item.StockAdjustmentDetails.Mfp }}</div>
+            </div>
+            <div class="item-row" >
+                <div class="item-label">MRP</div>
+                <div class="item-value">: {{ item.StockAdjustmentDetails.Mrp }}</div>
+            </div>
+            <div class="item-row" >
+                <div class="item-label">C Stock</div>
+                <div class="item-value">: {{ item.StockAdjustmentDetails.SysQty }}</div>
+            </div>
+            <div class="item-row align-items-center">
+                <div class="item-label">Physical Stock</div>
+                <div class="item-value input-field d-flex align-items-center">
+                    : <input type="number" class="form-control ms-2" [(ngModel)]="item.StockAdjustmentDetails.Quantity">
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <div class="powered-by">
+            Powered by Fumera
+        </div>
+</div>
+
+<div *ngIf="!showSearchScreen" class="sticky-bottom-bar">
+    <button class="btn btn-update" type="button" (click)="SubmitDetails()">UPDATE</button>
+</div>

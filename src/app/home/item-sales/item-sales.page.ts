@@ -34,6 +34,8 @@ export class ItemSalesPage implements OnInit {
    }
 
   ngOnInit() {
+    console.log('jjj');
+    
   }
 
   getReport(){

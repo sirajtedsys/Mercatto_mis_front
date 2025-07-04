@@ -30,6 +30,8 @@ export class SalesStatusPage implements OnInit {
    }
 
   ngOnInit(): void {
+    console.log();
+    
     // this.loadScript('../../../assets/report/assets/js/jquery.min.js');
     // this.loadScript('../../../assets/report/assets/js/popper.js');
     // this.loadScript('../../../../assets/report/assets/js/bootstrap.bundle.min.js');

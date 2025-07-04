@@ -56,10 +56,10 @@
 
       <h5 class="text-center fw-bold">Item Sales Report from {{ Fromd | date:'dd/MMM/yyyy'  }} to  {{ Tod |date:'dd/MMM/yyyy'}}</h5>
      
-     <div class="col-12 text-center" *ngIf="BillWiseReportData.length==0 && ColumnHeaders.length==0">
+     <div class="col-12 text-center" *ngIf="BillWiseReportData.length===0 && ColumnHeaders.length===0">
       <h5 class="text-center">No Record Found!</h5>
      </div>
-      <div class="table-container" *ngIf="BillWiseReportData.length!=0 && ColumnHeaders.length!=0">
+      <div class="table-container" *ngIf="BillWiseReportData.length!==0 && ColumnHeaders.length!==0">
         <table class="custom-table">
           <thead>
             <tr>

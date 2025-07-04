@@ -60,19 +60,19 @@
       </div>
 
 
-      <div class="col-8 col-md-4 col-lg-4" *ngIf="SearchType=='Bill'">
+      <div class="col-8 col-md-4 col-lg-4" *ngIf="SearchType==='Bill'">
         <div class="form-group">
           <label for="bill">Bill No</label> 
           <input type="text" class="form-control"  [(ngModel)]="InvoiceBillNo" id="bill" name="bill" placeholder="Bill No">
         </div>
       </div>
-      <div class="col-8 col-md-4 col-lg-4" *ngIf="SearchType=='Invoice'">
+      <div class="col-8 col-md-4 col-lg-4" *ngIf="SearchType==='Invoice'">
         <div class="form-group">
           <label for="invoice">Invoice No</label> 
           <input type="text" class="form-control" placeholder="Invoice No" [(ngModel)]="InvoiceBillNo" id="invoice" name="invoice">
         </div>
       </div>
-      <div class="col-4 col-md-2 col-lg-2" *ngIf="SearchType!='Cust'">
+      <div class="col-4 col-md-2 col-lg-2" *ngIf="SearchType!=='Cust'">
         <button class="btn btn-outline-success active mt-4" (click)="SearchInvoiceorBill()"><i class="fa fa-search"></i></button>
       </div>
       
@@ -80,7 +80,7 @@
 
 
 
-    <div class="row" *ngIf="SearchType=='Cust'">
+    <div class="row" *ngIf="SearchType==='Cust'">
       <div class="col-12">
         <div class="form-group">
           <label for="">Customers</label>
@@ -125,10 +125,10 @@
     <div class="row">
       <div class="col-6 col-md-3">
         <!-- <input type="radio">Bill Wise -->
-        <input type="radio" [checked]="Billtype=='consolidate'" (change)="BillTypeChange($event,'consolidate')">Consolidate
+        <input type="radio" [checked]="Billtype==='consolidate'" (change)="BillTypeChange($event,'consolidate')">Consolidate
       </div>
       <div class="col-6 col-md-3">
-        <input type="radio" [checked]="Billtype=='bill'" (change)="BillTypeChange($event,'bill')">Bill Wise
+        <input type="radio" [checked]="Billtype==='bill'" (change)="BillTypeChange($event,'bill')">Bill Wise
         <!-- <input type="radio">Consolidate -->
       </div>
       <div class="col-12 col-md-6">
@@ -151,7 +151,7 @@
   <!-- </div> -->
 </div>
 
-<div class="container" *ngIf="appconfig.MobileApp==true &&CustomerPaymentList.length>0">
+<div class="container" *ngIf="appconfig.MobileApp===true &&CustomerPaymentList.length>0">
   <div class="card1 p-1">
     <div class="row">
       <div class="col-6">
@@ -197,19 +197,19 @@
           "SALE_ID": 121240039819
       } -->
           <tr *ngFor="let items of getFilteredCustomerPayments();let i = index">
-              <td><input type="checkbox" [checked]="items.Checked==true" (change)="CheckItems($event,items,i)" class="status-checkbox cpoint"></td>
+              <td><input type="checkbox" [checked]="items.Checked===true" (change)="CheckItems($event,items,i)" class="status-checkbox cpoint"></td>
               <td>{{items.SECTION}}</td>
               <td data-label="Bill Date">{{items.SALE_DATE | date:'dd/MMM/yyyy hh:mm a'}}</td>
               <td data-label="Manual Inv.No">{{items.MANUAL_INVOICE_NO}}</td>
               <td data-label="Bill #">{{items.SALE_BILL_NO}}</td>
               <td data-label="Customer">{{items.CUST_NAME}}</td>
               <td data-label="Bill Amt">{{items.SALE_NET_AMT}}</td>
-              <td data-label="Col Amt">{{items.SETTLED_AMT==null?0:items.SETTLED_AMT}}</td>
+              <td data-label="Col Amt">{{items.SETTLED_AMT===null?0:items.SETTLED_AMT}}</td>
               <td data-label="Bal. Amt">{{GetBalanceAMount(0,items.SETTLED_AMT,items.SALE_NET_AMT,items.Entered_settle_amt)}}
                 <!-- <input type="text" [value]="" disabled class="form-control text-end"> -->
               </td>
-              <td data-label="Disc Amt"><input type="number" [disabled]="items.Checked!=true || Billtype!='bill'" (input)="EnterDiscount($event,items,i)" class="form-control text-end" [value]="items.SETTLED_DISC_AMT"></td>
-              <td data-label="Settled Amt"><input [disabled]="items.Checked!=true" type="number"(input)="EnterSettledAmount($event,items,i)" class="form-control text-end" [value]="items.Entered_settle_amt"></td>
+              <td data-label="Disc Amt"><input type="number" [disabled]="items.Checked!==true || Billtype!=='bill'" (input)="EnterDiscount($event,items,i)" class="form-control text-end" [value]="items.SETTLED_DISC_AMT"></td>
+              <td data-label="Settled Amt"><input [disabled]="items.Checked!==true" type="number"(input)="EnterSettledAmount($event,items,i)" class="form-control text-end" [value]="items.Entered_settle_amt"></td>
           </tr>
   
       </tbody>
@@ -227,7 +227,7 @@
       <div class="col-6 col-md-3" >
         <div class="form-group">
           <label for="CrbcDiscAmt">Discount Amount</label>
-          <input type="number" [disabled]="Billtype=='bill'" [value]="GetDiscountAmount()" [(ngModel)]="cb.CrbcDiscAmt" id="CrbcDiscAmt" name="CrbcDiscAmt" class="form-control" placeholder="Discount Amount">
+          <input type="number" [disabled]="Billtype==='bill'" [value]="GetDiscountAmount()" [(ngModel)]="cb.CrbcDiscAmt" id="CrbcDiscAmt" name="CrbcDiscAmt" class="form-control" placeholder="Discount Amount">
         </div>
       </div>
       <div class="col-6 col-md-3">

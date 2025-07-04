@@ -40,7 +40,7 @@ export class AppConfig{
     //  url:string='http://88.201.64.166/MEATAPI/api'
     //  url:string='https://meat.remedihms.com/api'
     //  http://meat.remedihms.com
-     MobileApp:boolean=false
+     MobileApp:boolean=true
     //MobileApp:boolean=false
 
 

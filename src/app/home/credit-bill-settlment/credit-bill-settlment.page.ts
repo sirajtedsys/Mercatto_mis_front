@@ -123,6 +123,8 @@ WalletList:any[]=[]
   }
 
   ngOnInit() {
+    console.log();
+    
   }
 
   GetSectionId() {
