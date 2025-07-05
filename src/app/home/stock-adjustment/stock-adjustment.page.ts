@@ -263,7 +263,7 @@ CounterId:string=''
           if(data.Status==200)
           {
             
-            this.ToDate= this.parseDate(data.Data.ToDate)
+            this.ToDate= data.Data.ToDate
             this.StartDate=data.Data.FromDate
 //             {
 //     "FromDate": "01/01/2024",
@@ -393,7 +393,7 @@ CounterId:string=''
                 let a  =  new StockAdjustmentCombine()
                 a.StockAdjustmentHeader.CounterId = this.CounterId
                 a.StockAdjustmentHeader.FromDate =this.StartDate
-                a.StockAdjustmentHeader.ToDate = this.datepipe.transform(this.ToDate,'dd/MM/yyyy')
+                a.StockAdjustmentHeader.ToDate = this.ToDate
                 a.StockAdjustmentHeader.SctId = this.SctId
                 a.StockAdjustmentHeader.Reason = this.StartDate
                 a.StockAdjustmentDetails.BatchCode = d[i].BATCH_CODE
